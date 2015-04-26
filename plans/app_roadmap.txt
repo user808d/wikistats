@@ -1,0 +1,62 @@
+-- Data Hosting --
+
+Vector Table for CSV data
+
+R(vid, x1, x2, x3, ..)
+x1..xn heterogenous types
+
+Meta data on Type and Stats
+
+-- API Structure --
+
+split up api into its own router?
+
+Users
+        /users
+        /users/:email
+Articles
+        /articles
+        /articles/:id
+        /articles/:email
+Edits
+        /edits
+        /edits/:email
+        /edits/:article_id
+        /edits/:date
+
+-- Site Structure --
+
+Persistent Header navbar
+        -Home
+        -About
+        -Search
+        -Dashboard (if already signed in)
+        -Sign In (if NOT already signed in)
+        -Sign Out (if already signed in)
+
+Index
+        -Short description
+        -List of recent articles
+        -Search bar
+        --About
+                -description of site
+                -authors
+                -mission/intent
+        --Sign-up
+                -email
+                -password
+
+Article
+        -Chart
+        -Abstract content
+        -Author
+        -references
+        -edit page button
+
+Dashboard
+        -Display user info
+        -Change password field
+
+Search
+        -api query results
+        -fuzzy and smart searching (?)
