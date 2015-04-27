@@ -6,7 +6,7 @@ GRANT ALL ON `wikistats_db`.* to 'wstatsuser'@'localhost' identified by 'WikiSta
 CREATE TABLE IF NOT EXISTS Fields
 (
         fieldID SMALLINT AUTO_INCREMENT,
-	fieldName VARCHAR(30) NOT NULL,
+	fieldName VARCHAR(30) NOT NULL UNIQUE,
 	PRIMARY KEY (fieldID)
 );
 
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS Users
 	pwHash CHAR(40),
 	city VARCHAR(30),
 	state CHAR(2),
-	zip SMALLINT,
+	zip INT,
 	position VARCHAR(30),
 	website VARCHAR(50),
 	fieldID SMALLINT NOT NULL REFERENCES Fields,
@@ -33,9 +33,10 @@ CREATE TABLE IF NOT EXISTS Types
 CREATE TABLE IF NOT EXISTS Stats
 (
 	statsID SMALLINT NOT NULL AUTO_INCREMENT,
+        articleID SMALLINT NOT NULL REFERENCES Articles,
 	typeID SMALLINT NOT NULL REFERENCES Types,
 	tableName VARCHAR(100),
-	PRIMARY KEY (statsID)
+	PRIMARY KEY (statsID, articleID)
 );
 
 CREATE TABLE IF NOT EXISTS Articles
