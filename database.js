@@ -7,26 +7,27 @@ var pool = mysql.createPool({
     database: 'wikistats_db'
 });
 
-pool.select = function(res, queryString, params){
+pool.select = function(queryString, params, cb){
     pool.getConnection(function(err, connection){
         if(err){
             console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
+            cb({result: 'con_error', err: err.code});
         }
         else{            
-            connection.query(queryString, params, function(err, rows, fields){
+            connection.query(queryString, params, function(err, rows, cols){
                 connection.release();
                 if(err){
                     console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
+                    cb({
+                        result: 'q_error',
                         err: err.code
                     });
                 }
                 else{
-                    res.send({
-                        rows: rows
+                    cb({
+                        result: 'success',
+                        rows: rows,
+                        cols: cols
                     });
                 }
             });
@@ -34,25 +35,72 @@ pool.select = function(res, queryString, params){
     });
 };
 
-pool.insert = function(res, queryString, values){
+pool.insert = function(queryString, values, cb){
     pool.getConnection(function(err, connection){
         if(err){
             console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
+            cb({result: 'con_error', err: err.code});
         }
         else{            
-            connection.query(queryString, values, function(err, rows, fields){
+            connection.query(queryString, values, function(err, rows, cols){
                 connection.release();
                 if(err){
                     console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
+                    cb({
+                        result: 'q_error',
                         err: err.code
                     });
                 }
                 else{
-                    res.send('Success');
+                    cb({result: 'success'});
+                }
+            });
+        }
+    });
+};
+
+pool.update = function(queryString, values, cb){
+    pool.getConnection(function(err, connection){
+        if(err){
+            console.error('Connection error: ', err);
+            cb({result: 'con_error', err: err.code});
+        }
+        else{            
+            connection.query(queryString, values, function(err, rows, cols){
+                connection.release();
+                if(err){
+                    console.error(err);
+                    cb({
+                        result: 'q_error',
+                        err: err.code
+                    });
+                }
+                else{
+                    cb({result: 'success'});
+                }
+            });
+        }
+    });
+};
+
+pool.del = function(queryString, values, cb){
+    pool.getConnection(function(err, connection){
+        if(err){
+            console.error('Connection error: ', err);
+            cb({result: 'con_error', err: err.code});
+        }
+        else{            
+            connection.query(queryString, values, function(err, rows, cols){
+                connection.release();
+                if(err){
+                    console.error(err);
+                    cb({
+                        result: 'q_error',
+                        err: err.code
+                    });
+                }
+                else{
+                    cb({result: 'success'});
                 }
             });
         }
