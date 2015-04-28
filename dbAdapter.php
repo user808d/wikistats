@@ -7,9 +7,8 @@
 	Makes use of newer PHP Data Objects (PDOs)
 */
 
-$debug = false;
-
 // http://127.0.0.1/dbAdapter.php?function=x&y=z
+$debug = false;
 if( $debug ) print_r($_GET);
 
 // Database Constants (to be relocated)
@@ -41,7 +40,7 @@ function cleanInput( $data ) {
 // Insert new field name
 createField() {
 
-	global $db, $debug;
+	global $db;
 	
 	$query = 'INSERT INTO Field (fieldName) VALUES (:fieldName)';
 
@@ -56,15 +55,13 @@ createField() {
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 	}
 	
-	if( $debug ) print( json_encode( $results ) );
-	
 	return json_encode( $results );
 }
 
 // Insert new graph type
 createGraphType() {
 
-	global $db, $debug;
+	global $db;
 	
 	$query = 'INSERT INTO graphType (typeName) VALUES (:typeName)';
 
@@ -79,15 +76,13 @@ createGraphType() {
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 	}
 	
-	if( $debug ) print( json_encode( $results ) );
-	
 	return json_encode( $results );
 }
 
 // Insert new user
 createUser() {
 
-	global $db, $debug;
+	global $db;
 	
 	$query = 'INSERT INTO User (email, pwHash, city, state, zip, position, website, fieldID)'
 	 . 'VALUES (:email, :pwHash, :city, :stateAbr, :zip, :position, :website, (SELECT fieldID'
@@ -124,15 +119,13 @@ createUser() {
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 	}
 	
-	if( $debug ) print( json_encode( $results ) );
-	
 	return json_encode( $results );	  
 }
 
 //create a new stat entry
 createStat() {
 
-	global $db, $debug;
+	global $db;
 	
 	$query = 'INSERT INTO Stats (tableName, typeID) VALUES (:tableName, (SELECT typeID '
 	 . 'FROM graphType WHERE typeName = :typeName))';
@@ -150,15 +143,13 @@ createStat() {
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 	}
 	
-	if( $debug ) print( json_encode( $results ) );
-	
 	return json_encode( $results );
 }
 
 //create a new article entry
 createArticle() {
 
-	global $db, $debug;
+	global $db;
 	
 	$query = 'INSERT INTO Article (authorEmail, statsID) VALUES (:authorEmail, :statsID)';
 
@@ -175,15 +166,13 @@ createArticle() {
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 	}
 	
-	if( $debug ) print( json_encode( $results ) );
-	
 	return json_encode( $results );
 }
 
 //create an edit log
 createEdit() {
 
-	global $db, $debug;
+	global $db;
 	
 	$query = 'INSERT INTO Edits (authorEmail, articleID, editDate) '
 	 . 'VALUES (:authorEmail, :articleID, NOW())';
@@ -201,15 +190,13 @@ createEdit() {
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 	}
 	
-	if( $debug ) print( json_encode( $results ) );
-	
 	return json_encode( $results );
 }
 
 //create an Abstract entry
 createAbstract() {
 
-	global $db, $debug;
+	global $db;
 	
 	$query = 'INSERT INTO Abstracts (content, articleID) VALUES (:content, :articleID)';
 
@@ -226,15 +213,13 @@ createAbstract() {
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 	}
 	
-	if( $debug ) print( json_encode( $results ) );
-	
 	return json_encode( $results );
 }
 
 //create a URL Reference
 createReference() {
 
-	global $db, $debug;
+	global $db;
 	
 	$query = 'INSERT INTO Reference (articleID, urlReference) VALUES (:articleID, :urlReference)';
 
@@ -251,15 +236,13 @@ createReference() {
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 	}
 	
-	if( $debug ) print( json_encode( $results ) );
-	
 	return json_encode( $results );
 }
 
 //create a 3D Graph Entry
 create3DGraph() {
 
-	global $db, $debug;
+	global $db;
 	
 	$query = 'INSERT INTO 3D (X, Y, Z) VALUES (:x, :y, :z)';
 
@@ -278,15 +261,13 @@ create3DGraph() {
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 	}
 	
-	if( $debug ) print( json_encode( $results ) );
-	
 	return json_encode( $results );
 }
 
 //create a Line Graph Entry
 createLineGraph() {
 
-	global $db, $debug;
+	global $db;
 	
 	$query = 'INSERT INTO Line (X, Y, Color) VALUES (:x, :y, :color)';
 
@@ -305,8 +286,6 @@ createLineGraph() {
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);			
 	}
 	
-	if( $debug ) print( json_encode( $results ) );
-	
 	return json_encode( $results );
 }
 
@@ -319,28 +298,28 @@ if( isset( $_GET['function'] ) ) {
 	$function = cleanInput( $_GET['function'] );
 	
 	if( $function == 'createField' )
-		return createField();
+		print createField();
 		
 	elseif($function == 'createGraphType')
-		return createGraphType();
+		print createGraphType();
 		
 	elseif($function == 'createArticle')
-		return createArticle();
+		print createArticle();
 		
 	elseif($function == 'createEdit')
-		return createEdit();
+		print createEdit();
 		
 	elseif($function == 'createAbstract')
-		return createAbstract();
+		print createAbstract();
 		
 	elseif($function == 'createReference')
-		return createReference();
+		print createReference();
 		
 	elseif($function == 'create3DGraph')
-		return create3DGraph();
+		print create3DGraph();
 		
 	elseif($function == 'createLineGraph')
-		return createLineGraph();
+		print createLineGraph();
 		
 	//elseif...other query request
 }
