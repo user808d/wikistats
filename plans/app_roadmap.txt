@@ -7,22 +7,39 @@ x1..xn heterogenous types
 
 Meta data on Type and Stats
 
+needs:
+cols names and their types,
+title,
+
 -- API Structure --
 
-split up api into its own router?
+move api logic into get/post/put/delete fns
+only have query strings and params passed in
+
+Fields
 
 Users
         /users
         /users/:email
+        
+Types
+
+Stats
+
 Articles
         /articles
         /articles/:id
         /articles/:email
+
 Edits
         /edits
         /edits/:email
         /edits/:article_id
-        /edits/:date
+        /edits/:date (range?)
+
+URLReferences
+
+Abstracts
 
 -- Site Structure --
 
