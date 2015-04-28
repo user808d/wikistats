@@ -3,79 +3,34 @@ var db = require('../database');
 var api = express.Router();
 
 /* GET fields */
+api.get('/fields/', function(req, res, next){
+    var q_string = 'SELECT * FROM Fields';
+});
+
+/* POST new field */
+api.post('/fields/', function(req, res, next){
+    var q_string = 'INSERT INTO Fields VALUES(?)';
+    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
+
+    db.insert(res, q_string, q_values);
+});
 
 /* GET users */
 api.get('/users/', function(req, res, next) {
-    db.getConnection(function(err, connection){
-        if(err){
-            console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
-        }
-        else{
-            var q_string = 'SELECT email, city, state, zip,'
+    var q_string = 'SELECT email, city, state, zip,'
                 + 'position, website, F.fieldName '
                 + 'FROM Users U, Fields F WHERE U.fieldID = F.fieldID';
-            
-            connection.query(q_string, function(err, rows, fields){
-                connection.release();
-                if(err){
-                    console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
-                        err: err.code
-                    });
-                }
-                else{
-                    res.send({
-                        users: rows
-                    });
-                }
-            });
-        }
-    });
+
+    db.select(res, q_string, []);
 });
 
 /* POST new user */
 api.post('/users/', function(req, res, next) {
-    db.getConnection(function(err, connection){
-        if(err){
-            console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
-        }
-        else{            
-            var email = req.body.email,
-                pwHash = req.body.pwHash,
-                city = req.body.city,
-                state = req.body.state,
-                zip = req.body.zip,
-                position = req.body.position,
-                website = req.body.website,
-                fieldName = req.body.fieldName;
-
-            q_string = 'INSERT INTO Users VALUES(?, ?, ?, ?, ?, ?, ?, '
-                + '(SELECT fieldID FROM Fields WHERE fieldName = ?));';
-            
-            connection.query(q_string,
-                             [email, pwHash, city,
-                              state, zip, position, website,
-                              fieldName],
-                             function(err, rows, fields){
-                                 connection.release();
-                                 if(err){
-                                     console.error(err);
-                                     res.statusCode = 500;
-                                     res.send({
-                                         result: 'error',
-                                         err: err.code
-                                     });
-                                 }
-                                 else{
-                                     res.redirect('/api/users/'+email);
-                                 }
-            });
-        }
-    });
+    var q_string = 'INSERT INTO Users VALUES(?, ?, ?, ?, ?, ?, ?, '
+        + '(SELECT fieldID FROM Fields WHERE fieldName = ?))';
+    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
+    
+    db.insert(res, q_string, q_values);
 });
 
 /* PUT updated user info */
@@ -88,66 +43,18 @@ api.delete('/users/:email', function(req, res, next){
 
 /* GET user info by email */
 api.get('/users/:email', function(req, res, next) {
-    db.getConnection(function(err, connection){
-        if(err){
-            console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
-        }
-        else{
-            var q_string = 'SELECT * FROM Users U, Fields F '
-                + 'WHERE F.fieldID = U.fieldID AND U.email = ?;';
-
-            var email = req.params.email;
-            
-            connection.query(q_string, [email], function(err, rows, fields){
-                connection.release();
-                if(err){
-                    console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
-                        err: err.code
-                    });
-                }
-                else{
-                    res.send({
-                        users: rows
-                    });
-                }
-            });
-        }
-    });
+    var q_string = 'SELECT * FROM Users U, Fields F '
+        + 'WHERE F.fieldID = U.fieldID AND U.email = ?';
+    var q_params = Object.keys(req.params).map(function(k){return req.params(k);});
+    db.select(res, q_string, q_params);
 });
 
 /* GET articles */
 api.get('/articles/', function(req, res, next) {
-    db.getConnection(function(err, connection){
-        if(err){
-            console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
-        }
-        else{
-            var q_string = 'SELECT * FROM Articles A, Abstracts Ab '
-                + 'WHERE A.articleID = Ab.articleID;';
-            
-            connection.query(q_string, function(err, rows, fields){
-                connection.release();         
-                if(err){
-                    console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
-                        err: err.code
-                    });
-                }
-                else{
-                    res.send({
-                        articles: rows
-                    });
-                }
-            });
-        }
-    });
+    var q_string = 'SELECT * FROM Articles A, Abstracts Ab '
+        + 'WHERE A.articleID = Ab.articleID';
+
+    db.select(res, q_string, []);
 });
 
 /* POST newly authored article */
@@ -156,34 +63,11 @@ api.post('/articles/', function(req, res, next) {
 
 /* GET article by id */
 api.get('/articles/:id', function(req, res, next) {
-    db.getConnection(function(err, connection){
-        if(err){
-            console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
-        }
-        else{
-            var q_string = 'SELECT * FROM Articles A, Abstracts Ab '
-                + 'WHERE A.articleID = Ab.articleID AND A.articleID = ?;';
-            var id = req.params.id;
-            
-            connection.query(q_string, [id], function(err, rows, fields){
-                connection.release();
-                if(err){
-                    console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
-                        err: err.code
-                    });
-                }
-                else{
-                    res.send({
-                        articles: rows
-                    });
-                }
-            });
-        }
-    });
+    var q_string = 'SELECT * FROM Articles A, Abstracts Ab '
+        + 'WHERE A.articleID = Ab.articleID AND A.articleID = ?';
+    var q_params = Object.keys(req.params).map(function(k){return req.params(k);});
+
+    db.select(res, q_string, q_params);
 });
 
 /* PUT updated article by id */
@@ -192,65 +76,18 @@ api.put('/articles/:id', function(req, res, next) {
 
 /* GET articles by author (email must be encoded) */
 api.get('/articles/:email', function(req, res, next) {
-    db.getConnection(function(err, connection){
-        if(err){
-            console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
-        }
-        else{
-            var q_string = 'SELECT * FROM Articles A, Abstracts Ab '
-                + 'WHERE A.articleID = Ab.articleID AND A.authorEmail = ?;';
+    var q_string = 'SELECT * FROM Articles A, Abstracts Ab '
+        + 'WHERE A.articleID = Ab.articleID AND A.authorEmail = ?';
+    var q_params = Object.keys(req.params).map(function(k){return req.params(k);});
 
-            var email = req.params.email;
-            
-            connection.query(q_string, [email], function(err, rows, fields){
-                connection.release();         
-                if(err){
-                    console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
-                        err: err.code
-                    });
-                }
-                else{
-                    res.send({
-                        articles: rows
-                    });
-                }
-            });
-        }
-    });
+    db.select(res, q_string, q_params);
 });
 
 /* GET edits */
 api.get('/edits/', function(req, res, next) {
-    db.getConnection(function(err, connection){
-        if(err){
-            console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
-        }
-        else{
-            var q_string = 'SELECT * FROM Edits;';
-            
-            connection.query(q_string, function(err, rows, fields){
-                connection.release();         
-                if(err){
-                    console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
-                        err: err.code
-                    });
-                }
-                else{
-                    res.send({
-                        edits: rows
-                    });
-                }
-            });
-        }
-    });
+    var q_string = 'SELECT * FROM Edits';
+
+    db.select(res, q_string, []);
 });
 
 /* POST user edit to an article */
@@ -259,128 +96,35 @@ api.post('/edits/:article_id', function(req, res, next) {
 
 /* GET edits by author */
 api.get('/edits/:email', function(req, res, next) {
-    db.getConnection(function(err, connection){
-        if(err){
-            console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
-        }
-        else{
-            var q_string = 'SELECT * FROM Edits WHERE authorEmail = ?;';
-            var email = req.params.email;
-            
-            connection.query(q_string, [email], function(err, rows, fields){
-                connection.release();
-                if(err){
-                    console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
-                        err: err.code
-                    });
-                }
-                else{
-                    res.send({
-                        edits: rows
-                    });
-                }
-            });
-        }
-    });
+    var q_string = 'SELECT * FROM Edits WHERE authorEmail = ?';
+    var q_params = Object.keys(req.params).map(function(k){return req.params(k);});
+
+    db.select(res, q_string, q_params);
 });
 
 /* GET edits by date */
 api.get('/edits/:date', function(req, res, next) {
-    db.getConnection(function(err, connection){
-        if(err){
-            console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
-        }
-        else{
-            var q_string = 'SELECT * FROM Edits WHERE date = ?;';
-            var date = req.params.date;
-            
-            connection.query(q_string, [date], function(err, rows, fields){
-                connection.release();         
-                if(err){
-                    console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
-                        err: err.code
-                    });
-                }
-                else{
-                    res.send({
-                        edits: rows
-                    });
-                }
-            });
-        }
-    });
+    var q_string = 'SELECT * FROM Edits WHERE date = ?';
+    var q_params = Object.keys(req.params).map(function(k){return req.params(k);});
+
+    db.select(res, q_string, q_params);
 });
 
 /* GET edits by article id */
 api.get('/edits/:article_id', function(req, res, next) {
-    db.getConnection(function(err, connection){
-        if(err){
-            console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
-        }
-        else{
-            var q_string = 'SELECT * FROM Edits WHERE articleID = ?;';
-            var article_id = req.params.article_id;
-            
-            connection.query(q_string, [article_id], function(err, rows, fields){
-                connection.release();
-                if(err){
-                    console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
-                        err: err.code
-                    });
-                }
-                else{
-                    res.send({
-                        edits: rows
-                    });
-                }
-            });
-        }
-    });
+    var q_string = 'SELECT * FROM Edits WHERE articleID = ?';
+    var q_params = Object.keys(req.params).map(function(k){return req.params(k);});
+
+    db.select(res, q_string, q_params);
 });
 
 /* GET stats for an article */
 api.get('/stats/:article_id', function(req, res, next) {
-    db.getConnection(function(err, connection){
-        if(err){
-            console.error('Connection error: ', err);
-            res.send({result: 'error', err: err.code});
-        }
-        else{
-            var q_string = 'SELECT * FROM Stats S, Types T'
-                + 'WHERE S.typeID = T.typeID AND S.articleID = ?;';
-            
-            var article_id = req.params.article_id;
-            
-            connection.query(q_string, [article_id], function(err, rows, fields){
-                connection.release();
-                if(err){
-                    console.error(err);
-                    res.statusCode = 500;
-                    res.send({
-                        result: 'error',
-                        err: err.code
-                    });
-                }
-                else{
-                    res.send({
-                        stats: rows                        
-                    });
-                }
-            });
-        }
-    });
+    var q_string = 'SELECT * FROM Stats S, Types T'
+        + 'WHERE S.typeID = T.typeID AND S.articleID = ?';
+    var q_params = Object.keys(req.params).map(function(k){return req.params(k);});
+
+    db.select(res, q_string, q_params);
 });
 
 module.exports = api;
