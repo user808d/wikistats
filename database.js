@@ -52,7 +52,10 @@ pool.insert = function(queryString, values, cb){
                     });
                 }
                 else{
-                    cb({result: 'success'});
+                    cb({
+                        result: 'success',
+                        id: rows.insertedID
+                    });
                 }
             });
         }
@@ -63,7 +66,7 @@ pool.update = function(queryString, values, cb){
     pool.getConnection(function(err, connection){
         if(err){
             console.error('Connection error: ', err);
-            cb({result: 'con_error', err: err.code});
+            cb({ result: 'con_error', err: err.code });
         }
         else{            
             connection.query(queryString, values, function(err, rows, cols){
@@ -76,7 +79,7 @@ pool.update = function(queryString, values, cb){
                     });
                 }
                 else{
-                    cb({result: 'success'});
+                    cb({ result: 'success' });
                 }
             });
         }
@@ -87,7 +90,7 @@ pool.del = function(queryString, values, cb){
     pool.getConnection(function(err, connection){
         if(err){
             console.error('Connection error: ', err);
-            cb({result: 'con_error', err: err.code});
+            cb({ result: 'con_error', err: err.code });
         }
         else{            
             connection.query(queryString, values, function(err, rows, cols){
@@ -100,7 +103,7 @@ pool.del = function(queryString, values, cb){
                     });
                 }
                 else{
-                    cb({result: 'success'});
+                    cb({ result: 'success' });
                 }
             });
         }
