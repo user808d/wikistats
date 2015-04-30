@@ -8,8 +8,7 @@ api.get('/fields/', function(req, res, next){
 
     db.select(q_string, [], function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -22,8 +21,7 @@ api.post('/fields/', function(req, res, next){
 
     db.insert(q_string, q_values, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -37,8 +35,7 @@ api.get('/users/', function(req, res, next) {
 
     db.select(q_string, [], function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -52,8 +49,7 @@ api.post('/users/', function(req, res, next) {
 
     db.insert(q_string, q_values, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -68,8 +64,7 @@ api.put('/users/', function(req, res, next){
 
     db.update(q_string, q_values, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -82,8 +77,7 @@ api.delete('/users/', function(req, res, next){
 
     db.del(q_string, q_params, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -97,8 +91,7 @@ api.get('/users/:email', function(req, res, next) {
 
     db.select(q_string, q_params, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -107,12 +100,11 @@ api.get('/users/:email', function(req, res, next) {
 /* GET articles */
 api.get('/articles/', function(req, res, next) {
     var q_string = 'SELECT * FROM Articles A, Abstracts Ab '
-        + 'WHERE A.articleID = Ab.articleID AND A.articleID = U.articleID';
+        + 'WHERE A.articleID = Ab.articleID';
     
     db.select(q_string, [], function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -125,8 +117,7 @@ api.post('/articles/', function(req, res, next) {
 
     db.insert(q_string, q_values, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -139,8 +130,7 @@ api.delete('/articles/', function(req, res, next) {
 
     db.insert(q_string, q_values, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -156,8 +146,7 @@ api.get('/articles/:id', function(req, res, next) {
 
     db.select(q_string, q_params, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -165,13 +154,12 @@ api.get('/articles/:id', function(req, res, next) {
 
 /* PUT updated article by id */
 api.put('/articles/', function(req, res, next) {
-    var q_string = '';
+    var q_string = 'UPDATE Articles SET title = ? WHERE articleID = ?';
     var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
 
     db.update(q_string, q_values, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -185,8 +173,7 @@ api.get('/articles/:email', function(req, res, next) {
 
     db.select(q_string, q_params, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -200,8 +187,7 @@ api.get('/stats/:article_id', function(req, res, next) {
 
     db.select(q_string, q_params, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -215,8 +201,7 @@ api.get('/stats/:article_id', function(req, res, next) {
 
     db.insert(q_string, q_values, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -228,8 +213,7 @@ api.get('/edits/', function(req, res, next) {
 
     db.select(q_string, [], function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -242,8 +226,7 @@ api.post('/edits/', function(req, res, next) {
     
     db.post(q_string, q_values, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -256,8 +239,7 @@ api.get('/edits/:email', function(req, res, next) {
 
     db.select(q_string, q_params, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -270,8 +252,7 @@ api.get('/edits/:date', function(req, res, next) {
 
     db.select(q_string, q_params, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -284,8 +265,7 @@ api.get('/edits/:article_id', function(req, res, next) {
 
     db.select(q_string, q_params, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -298,8 +278,7 @@ api.get('/abstracts/:article_id', function(req, res, next) {
 
     db.select(q_string, q_params, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -312,8 +291,20 @@ api.post('/abstracts/', function(req, res, next) {
 
     db.insert(q_string, q_values, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
+        }
+        else res.send(q_res);
+    });
+});
+
+/* PUT updated abstract by article id */
+api.put('/abstracts/', function(req, res, next) {
+    var q_string = 'UPDATE Abstracts SET content = ? WHERE articleID = ?';
+    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
+
+    db.update(q_string, q_values, function(q_res){
+        if(q_res.result == 'error'){
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -326,8 +317,7 @@ api.get('/urlReferences/:article_id', function(req, res, next) {
 
     db.select(q_string, q_params, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
@@ -340,8 +330,34 @@ api.post('/urlReferences/', function(req, res, next) {
 
     db.insert(q_string, q_values, function(q_res){
         if(q_res.result == 'error'){
-            res.statusCode = 500;
-            res.send(q_res);
+            res.status(500).send(q_res);
+        }
+        else res.send(q_res);
+    });
+});
+
+/* PUT updated URLReference by article id */
+api.put('/urlReferences/', function(req, res, next) {
+    var q_string = 'UPDATE URLReferences SET urlReference = ? '
+        + 'WHERE articleID = ? AND urlReference = ?';
+    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
+
+    db.update(q_string, q_values, function(q_res){
+        if(q_res.result == 'error'){
+            res.status(500).send(q_res);
+        }
+        else res.send(q_res);
+    });
+});
+
+/* POST csv data */
+api.post('/upload/', function(req, res, next) {
+    var q_string = 'CREATE TABLE IF NOT EXISTS ??'
+        + '()';
+
+    db.insert(q_string, q_values, function(q_res){
+        if(q_res.result == 'error'){
+            res.status(500).send(q_res);
         }
         else res.send(q_res);
     });
