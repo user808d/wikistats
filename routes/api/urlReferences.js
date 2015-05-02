@@ -3,12 +3,15 @@ module.exports = function(db){
     
     module.find = function(req, res, next) {
         var q_string = 'SELECT * FROM URLReferences WHERE ?';
-
+        req.locals = {};
         db.select(q_string, req.params, function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
-            else res.send(q_res.rows);
+            else{
+                req.locals.urlReferences = q_res.rows;
+                next();
+            }
         });
     }
 
@@ -19,7 +22,10 @@ module.exports = function(db){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
-            else res.send(q_res);
+            else{
+                req.locals = q_res;
+                next();
+            }
         });
     }
 
@@ -32,7 +38,10 @@ module.exports = function(db){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
-            else res.send(q_res);
+            else{
+                req.locals = q_res;
+                next();
+            }
         });
     }
 
