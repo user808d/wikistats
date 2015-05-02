@@ -1,366 +1,89 @@
 var express = require('express');
 var api = express.Router();
 var db = require('../database');
+var fields = require('./api/fields')(db);
+var users = require('./api/users')(db);
+var types = require('./api/types')(db);
+var articles = require('./api/articles')(db);
+var stats = require('./api/stats')(db);
+var edits = require('./api/edits')(db);
+var abstracts = require('./api/abstracts')(db);
+var urlRef = require('./api/urlReferences.js')(db);
 
-/* GET fields */
-api.get('/fields/', function(req, res, next){
-    var q_string = 'SELECT * FROM Fields';
+api.route('/fields')
+    .get(fields.all) //get all fields
+    .post(fields.add); //new field
 
-    db.select(q_string, [], function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
+api.route('/users')
+    .get(users.all) //get all users
+    .post(users.add) //new user
+    .put(users.update) //update user
+    .delete(users.delete); //remove user
+api.route('/users/:email')
+    .get(users.find); //find user by email(id)
 
-/* POST new field */
-api.post('/fields/', function(req, res, next){
-    var q_string = 'INSERT INTO Fields(fieldName) VALUES(?)';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
+api.route('/types')
+    .get(types.all); //get all types
 
-    db.insert(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
+api.route('/articles')
+    .get(articles.all) //get all articles
+    .post(articles.add) //new article
+    .put(articles.update) //update article
+    .delete(articles.delete); //remove article
+api.route('/articles/:articleID')
+    .get(articles.find); //find article by id
+api.route('/articles/:authorEmail')
+    .get(articles.find); //find article by email
+api.route('/articles/:pubDate')
+    .get(articles.find); //get articles by date
 
-/* GET users */
-api.get('/users/', function(req, res, next) {
-    var q_string = 'SELECT email, city, state, zip,'
-                + 'position, website, F.fieldName '
-                + 'FROM Users U, Fields F WHERE U.fieldID = F.fieldID';
+api.route('/stats')
+    .post(stats.add); //new stat for article
+api.route('/stats/:articleID')
+    .get(stats.find); //find stat by articleID
 
-    db.select(q_string, [], function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
+api.route('/edits')
+    .get(edits.all) //get all edits
+    .post(edits.add); //new article edit
+api.route('/edits/:authorEmail')
+    .get(edits.find); //get all user edits by email
+api.route('/edits/:editDate')
+    .get(edits.find); //get all edits by date
+api.route('/edits/:articleID')
+    .get(edits.find); //get all edits on an article
 
-/* POST new user */
-api.post('/users/', function(req, res, next) {
-    var q_string = 'INSERT INTO Users VALUES(?, ?, ?, ?, ?, ?, ?, '
-        + '(SELECT fieldID FROM Fields WHERE fieldName = ?))';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
+api.route('/abstracts')
+    .post(abstracts.add)
+    .put(abstracts.update);
+api.route('/abstracts/:articleID')
+    .get(abstracts.find);
 
-    db.insert(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* PUT updated user info */
-api.put('/users/', function(req, res, next){
-    var q_string = 'UPDATE Users SET pwHash = ?, city = ?, state = ?, zip = ?, '
-        + 'position = ?, website = ?, fieldID = '
-        + '(SELECT fieldID FROM Fields WHERE fieldName = ?) WHERE email = ?';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-
-    db.update(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* DELETE user */
-api.delete('/users/', function(req, res, next){
-    var q_string = 'DELETE FROM Users WHERE email = ?';
-    var q_params = Object.keys(req.body).map(function(k){return req.body[k];});
-
-    db.del(q_string, q_params, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* GET user info by email */
-api.get('/users/:email', function(req, res, next) {
-    var q_string = 'SELECT * FROM Users U, Fields F '
-        + 'WHERE F.fieldID = U.fieldID AND U.email = ?';
-    var q_params = Object.keys(req.params).map(function(k){return req.params[k];});
-
-    db.select(q_string, q_params, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* GET articles */
-api.get('/articles/', function(req, res, next) {
-    var q_string = 'SELECT * FROM Articles A, Abstracts Ab '
-        + 'WHERE A.articleID = Ab.articleID';
-    
-    db.select(q_string, [], function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* POST newly authored article */
-api.post('/articles/', function(req, res, next) {
-    var q_string = 'INSERT INTO Articles(title, authorEmail) VALUES(?, ?)';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-
-    db.insert(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* DELETE an article */
-api.delete('/articles/', function(req, res, next) {
-    var q_string = 'DELETE FROM Articles WHERE articleID = ?';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-
-    db.insert(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* GET article by id */
-api.get('/articles/:id', function(req, res, next) {
-    var q_string = 'SELECT * FROM Articles A, Abstracts Ab, URLReferences U, '
-        + 'Stats S, Type T '
-        + 'WHERE A.articleID = Ab.articleID AND A.articleID = ? AND '
-        + 'A.articleID = S.articleID AND A.articleID = U.articleID';
-    var q_params = Object.keys(req.params).map(function(k){return req.params[k];});
-
-    db.select(q_string, q_params, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* PUT updated article by id */
-api.put('/articles/', function(req, res, next) {
-    var q_string = 'UPDATE Articles SET title = ? WHERE articleID = ?';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-
-    db.update(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* GET articles by author (email must be encoded) */
-api.get('/articles/:email', function(req, res, next) {
-    var q_string = 'SELECT * FROM Articles A, Abstracts Ab '
-        + 'WHERE A.articleID = Ab.articleID AND A.authorEmail = ?';
-    var q_params = Object.keys(req.params).map(function(k){return req.params[k];});
-
-    db.select(q_string, q_params, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* GET stats by article */
-api.get('/stats/:article_id', function(req, res, next) {
-    var q_string = 'SELECT * FROM Stats S, Types T '
-        + 'WHERE S.typeID = T.typeID AND S.articleID = ?';
-    var q_params = Object.keys(req.params).map(function(k){return req.params[k];});
-
-    db.select(q_string, q_params, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* POST new stat for article */
-api.get('/stats/:article_id', function(req, res, next) {
-    var q_string = 'INSERT INTO Stats(articleID, typeID, tableName) '
-        + 'VALUES(?, ?, ?, ?)';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-
-    db.insert(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* GET edits */
-api.get('/edits/', function(req, res, next) {
-    var q_string = 'SELECT * FROM Edits';
-
-    db.select(q_string, [], function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* POST user edit to an article */
-api.post('/edits/', function(req, res, next) {
-    var q_string = 'INSERT INTO Edits(authorEmail, articleID) VALUES(?, ?)';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-    
-    db.post(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* GET edits by author */
-api.get('/edits/:email', function(req, res, next) {
-    var q_string = 'SELECT * FROM Edits WHERE authorEmail = ?';
-    var q_params = Object.keys(req.params).map(function(k){return req.params[k];});
-
-    db.select(q_string, q_params, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* GET edits by date */
-api.get('/edits/:date', function(req, res, next) {
-    var q_string = 'SELECT * FROM Edits WHERE editDate = ?';
-    var q_params = Object.keys(req.params).map(function(k){return req.params[k];});
-
-    db.select(q_string, q_params, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* GET edits by article id */
-api.get('/edits/:article_id', function(req, res, next) {
-    var q_string = 'SELECT * FROM Edits WHERE articleID = ?';
-    var q_params = Object.keys(req.params).map(function(k){return req.params[k];});
-
-    db.select(q_string, q_params, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* GET abstract by article id */
-api.get('/abstracts/:article_id', function(req, res, next) {
-    var q_string = 'SELECT * FROM Abstracts WHERE articleID = ?';
-    var q_params = Object.keys(req.params).map(function(k){return req.params[k];});
-
-    db.select(q_string, q_params, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* POST new abstract for article */
-api.post('/abstracts/', function(req, res, next) {
-    var q_string = 'INSERT INTO Abstracts(content, articleID) VALUES(?, ?)';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-
-    db.insert(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* PUT updated abstract by article id */
-api.put('/abstracts/', function(req, res, next) {
-    var q_string = 'UPDATE Abstracts SET content = ? WHERE articleID = ?';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-
-    db.update(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* GET urlReferences by articleID */
-api.get('/urlReferences/:article_id', function(req, res, next) {
-    var q_string = 'SELECT * FROM URLReferences WHERE articleID = ?';
-    var q_params = Object.keys(req.params).map(function(k){return req.params[k];});
-
-    db.select(q_string, q_params, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* POST urlReference for article */
-api.post('/urlReferences/', function(req, res, next) {
-    var q_string = 'INSERT INTO URLReferences VALUES(?,?)';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-
-    db.insert(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
-
-/* PUT updated URLReference by article id */
-api.put('/urlReferences/', function(req, res, next) {
-    var q_string = 'UPDATE URLReferences SET urlReference = ? '
-        + 'WHERE articleID = ? AND urlReference = ?';
-    var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-
-    db.update(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
-            res.status(500).send(q_res);
-        }
-        else res.send(q_res);
-    });
-});
+api.route('/urlReferences')
+    .post(urlRef.add)
+    .put(urlRef.update);
+api.route('/urlReferences/:articleID')
+    .get(urlRef.find);
 
 /* POST csv data */
 api.post('/upload/', function(req, res, next) {
-    var q_string = 'CREATE TABLE IF NOT EXISTS ??'
-        + '()';
-
-    db.insert(q_string, q_values, function(q_res){
-        if(q_res.result == 'error'){
+    var q_string = 'CREATE TABLE IF NOT EXISTS ? '
+        + '( vid INT AUTO INCREMENT, ';
+    var headers = JSON.parse(req.body.headers);
+    var q_params = [];
+    q_params.push(req.body.title);
+    
+    for(var i = 0; i < headers.length; ++i){
+        q_string += '? ?, ';
+    }
+    q_string += 'PRIMARY KEY vid );';
+    
+    console.log(q_string, q_params, req.body.headers);
+    /*db.insert(q_string, q_values, function(q_res){
+        if(q_res.result == 'q_error'){
             res.status(500).send(q_res);
         }
         else res.send(q_res);
-    });
+    });*/
 });
 
 module.exports = api;
