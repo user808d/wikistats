@@ -5,16 +5,11 @@ block content
       .row.row-offcanvas
         .col-xs-12
           .jumbotron
-            h1 WikiStats
+            h1 #{site}
             p
               | A place to find insightful, relevant data sources with data visualization.
-          .row
-            .col-6.col-sm-6.col-lg-4
-              h2 Heading
-              p
-                | Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-              p
-                a.btn.btn-default(href='#', role='button') View details &raquo;
+          .row#allArticles
+            include partials/page/allArticles.html
             // /span
           // /row
         // /span
