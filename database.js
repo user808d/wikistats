@@ -54,7 +54,7 @@ pool.insert = function(queryString, values, cb){
                 else{
                     cb({
                         result: 'success',
-                        id: rows.insertedID
+                        id: rows.insertId
                     });
                 }
             });
