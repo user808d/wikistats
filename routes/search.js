@@ -1,5 +1,4 @@
 var express = require('express');
-var db = require('../database');
 var searches = express.Router();
 
 /* GET search page */
