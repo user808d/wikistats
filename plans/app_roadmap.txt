@@ -55,13 +55,16 @@ Index
         -Short description
         -List of recent articles
         -Search bar
-        --About
-                -description of site
-                -authors
-                -mission/intent
-        --Sign-up
-                -email
-                -password
+
+About
+        -description of site
+        -authors
+        -mission/intent
+
+Sign-up
+        -email
+        -password
+        -etc.
 
 Article
         -Chart
