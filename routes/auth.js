@@ -1,5 +1,4 @@
 var express = require('express');
-var db = require('../database');
 var auth = express.Router();
 
 /* GET login page */
