@@ -1,0 +1,13 @@
+<script id="articlesList" type="text/x-handlebars-template">
+  {{#each articles}}
+  <div class="col-6 col-sm-6 col-lg-4">
+    <h2>{{title}}</h2>
+    <p>{{content}}</p>
+    <p>
+      <a href="/articles/{{articleID}}" role="button" class="btn btn-default">
+        View Details &raquo;
+      </a>
+    </p>
+  </div>
+  {{/each}}
+</script>
