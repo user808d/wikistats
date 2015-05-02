@@ -7,6 +7,6 @@ $(document).ready(function () {
     $results = $('#allArticles');
     
     $.get('/api/articles', function(data){
-        $results.html(template({articles: data}));
+        $results.html(template({articles: data.articles}));
     });
 });
