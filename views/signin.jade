@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  #login-container
+  .container#login-container
     form(method="post" url="/signin")#login-form.well.span4
       h1 Sign In
       p.subheading Please Sign In To Your Account
@@ -14,7 +14,7 @@ block content
       button(type="submit")#btn-login.btn.btn-primary
         i.icon-lock.icon-white
         | Sign in
-      div.clear-fix
+      div.clear-fix #{error}
       hr
       div.btm-links
         a(href='/signup')#create-account Create An Account

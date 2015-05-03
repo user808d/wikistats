@@ -17,19 +17,57 @@ module.exports = function(db){
         });
     }
 
-    module.add = function(req, res, next) {
-        var q_string = 'INSERT INTO Users SET ?';
+    module.add = [
+        function(req, res, next){
+            var q_string = 'SELECT fieldID FROM Fields WHERE fieldName = ?';
 
-        db.insert(q_string, req.body, function(q_res){
-            if(q_res.result == 'q_error'){
-                res.status(500).send(q_res);
-            }
-            else{
-                req.locals = q_res;
+            db.select(q_string, req.body.fieldName, function(q_res){
+                if(q_res.result == 'q_error'){
+                    res.status(500).send(q_res);
+                }
+                else{
+                    if(q_res.rows[0]){
+                        req.body.fieldID = q_res.rows[0].fieldID;
+                    }
+                    next();
+                }
+            });
+        },
+        function(req, res, next){
+            var q_string = 'INSERT INTO Fields SET fieldName = ?';
+
+            if(req.body.fieldID){
+                console.log(req.body.fieldName);
+                delete req.body.fieldName;
                 next();
             }
-        });
-    }
+            else{
+                db.insert(q_string, req.body.fieldName, function(q_res){
+                    if(q_res.result == 'q_error'){
+                        res.status(500).send(q_res); 
+                    }
+                    else{
+                        req.body.fieldID = q_res.id;
+                        delete req.body.fieldName;
+                        next();
+                    }
+                });
+            }
+        },
+        function(req, res, next) {
+            var q_string = 'INSERT INTO Users SET ?';
+
+            db.insert(q_string, req.body, function(q_res){
+                if(q_res.result == 'q_error'){
+                    res.status(500).send(q_res);
+                }
+                else{
+                    req.locals = q_res;
+                    next();
+                }
+            });
+        }
+    ]
 
     module.update = function(req, res, next){
         var q_string = 'UPDATE Users SET pwHash = ?, city = ?, state = ?, zip = ?, '
@@ -65,19 +103,22 @@ module.exports = function(db){
             });
         },
         function(req, res, next){
-            
             var q_string = 'DROP TABLE IF EXISTS ??';
             var q_params = [];
-            for(var i in req.locals)
-                for(var k in req.locals[i])
-                    q_params.push(req.locals[i][k]);
 
-            db.del(q_string, q_params, function(q_res){
-                if(q_res.result == 'q_error'){
-                    res.status(500).send(q_res);
-                }
-                else next();
-            });
+            if(req.locals.length > 0){
+                for(var i in req.locals)
+                    for(var k in req.locals[i])
+                        q_params.push(req.locals[i][k]);
+
+                db.del(q_string, q_params, function(q_res){
+                    if(q_res.result == 'q_error'){
+                        res.status(500).send(q_res);
+                    }
+                    else next();
+                });
+            }
+            else next();
         },
         function(req, res, next){
             var q_string = 'DELETE FROM Users WHERE ?';
@@ -110,19 +151,20 @@ module.exports = function(db){
     }
 
     module.auth = function(req, res, next){
-        var q_string = 'SELECT email, pwHash FROM Users WHERE ?';
-        res.locals = {};
-        db.select(q_string, req.body, function(q_res){
+        var q_string = 'SELECT email FROM Users '
+            + 'WHERE email = ? AND pwHash = ?';
+        var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
+        
+        db.select(q_string, q_values, function(q_res){
             if(q_res.result == 'q_error'){
-                req.locals = q_res;
+                res.status(500).send(q_res);
             }
             else{
-                req.session.user = q_res.rows[0];
-                delete req.session.user.pwHash;
-                res.locals.user = req.session.user;
+                req.session_state.user = q_res.rows[0];
+                res.locals.user = req.session_state.user;
+                next();
             }
         });
-        next();
     }
 
     return module;
