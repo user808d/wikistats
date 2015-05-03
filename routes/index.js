@@ -29,10 +29,10 @@ root.get('/articles/:articleID', articles.find, function(req, res, next){
     });
 });
 
-root.route('/login')
+root.route('/signin')
     .get(function(req, res, next){
-        res.render('login', {
-            title: 'Login',
+        res.render('signin', {
+            title: 'Sign In',
             site: 'WikiStats'
         });
     })
@@ -41,11 +41,14 @@ root.route('/login')
             res.redirect('/');
         }
         else{
-            res.render('login', {error: 'Invalid Email or Password'});
+            res.render('signin', {
+                title: 'Sign In',
+                site: 'WikiStats',
+                error: 'Invalid Email or Password'});
         }
     });
 
-root.route('/logout')
+root.route('/signout')
     .get(function(req, res, next){
         res.session.reset();
         res.redirect('/');

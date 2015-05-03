@@ -3,7 +3,7 @@ module.exports = function(db){
 
     module.all = function(req, res, next) {
         var q_string = 'SELECT email, city, state, zip,'
-            + 'position, website, F.fieldName '
+            + 'position, website, fieldName '
             + 'FROM Users U, Fields F WHERE U.fieldID = F.fieldID';
         req.locals = {};
         db.select(q_string, [], function(q_res){
@@ -103,10 +103,26 @@ module.exports = function(db){
                 res.status(500).send(q_res);
             }
             else{
-                req.locals.users = q_res.rows;
+                req.locals.user = q_res.rows[0];
                 next();
             }
         });
+    }
+
+    module.auth = function(req, res, next){
+        var q_string = 'SELECT email, pwHash FROM Users WHERE ?';
+        res.locals = {};
+        db.select(q_string, req.body, function(q_res){
+            if(q_res.result == 'q_error'){
+                req.locals = q_res;
+            }
+            else{
+                req.session.user = q_res.rows[0];
+                delete req.session.user.pwHash;
+                res.locals.user = req.session.user;
+            }
+        });
+        next();
     }
 
     return module;

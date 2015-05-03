@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  #login-container
+    form(method="post" url="/signin")#login-form.well.span4
+      h1 Sign In
+      p.subheading Please Sign In To Your Account
+      label Email &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+      input(type="text", name="email", id='user-tf').span4.required
+      br
+      label Password&nbsp
+      input(type="password", name="pwHash", id='pass-tf').span4.required
+      br
+      button(type="submit")#btn-login.btn.btn-primary
+        i.icon-lock.icon-white
+        | Sign in
+      div.clear-fix
+      hr
+      div.btm-links
+        a(href='/signup')#create-account Create An Account

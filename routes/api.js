@@ -61,13 +61,13 @@ api.route('/abstracts/:articleID')
     .get(abstracts.find, send); //find an abstract by article id
 
 api.route('/urlReferences')
-    .post(urlRef.add, send)
-    .put(urlRef.update, send);
+    .post(urlRef.add, send) //add urlReference
+    .put(urlRef.update, send); //update urlReference
 api.route('/urlReferences/:articleID')
-    .get(urlRef.find, send);
+    .get(urlRef.find, send); //find urlReference by articleID
 
 api.route('/search')
-    .post(articles.findLike, send);
+    .post(articles.findLike, send); //find articles similar to string provided
 
 /* POST csv data */
 api.post('/upload/', function(req, res, next) {

@@ -8,8 +8,15 @@ block content
             h1 #{site}
             p
               | A place to find insightful, relevant data sources with data visualization.
-          .row#allArticles
-            include partials/page/allArticles.html
+          .row
+          -for (var i in articles)
+            -var article = articles[i]
+            .col-6.col-sm-6.col-lg-4
+              h2 #{article.title}
+              p 
+                | #{article.content}
+              p
+                a(href="/articles/#{article.articleID}" role="button" class="btn btn-default") View Details &raquo;
             // /span
           // /row
         // /span
