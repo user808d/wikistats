@@ -5,8 +5,8 @@ var articles = require('./api/articles')(db);
 var users = require('./api/users')(db);
 
 function requireLogin (req, res, next) {
-  if (!req.user) {
-    res.redirect('/login');
+  if (!req.session_state.user) {
+    res.redirect('/signin');
   } else {
     next();
   }
@@ -16,15 +16,13 @@ function requireLogin (req, res, next) {
 root.get('/', articles.all, function(req, res, next) {
     res.render('index', {
         title: 'Home',
-        site: 'WikiStats',
         articles: req.locals.articles
     });
 });
 
-root.get('/articles/:articleID', articles.find, function(req, res, next){
+root.get('/articles/:articleID', requireLogin, articles.find, function(req, res, next){
     res.render('articles/show', {
         title: req.locals.articles[0].title,
-        site: 'WikiStats',
         article: req.locals.articles[0]
     });
 });
@@ -32,26 +30,31 @@ root.get('/articles/:articleID', articles.find, function(req, res, next){
 root.route('/signin')
     .get(function(req, res, next){
         res.render('signin', {
-            title: 'Sign In',
-            site: 'WikiStats'
+            title: 'Sign In'
         });
     })
     .post(users.auth, function(req, res, next){
-        if(req.session && req.session.user){
+        if(req.session_state && req.session_state.user){
             res.redirect('/');
         }
         else{
             res.render('signin', {
                 title: 'Sign In',
-                site: 'WikiStats',
                 error: 'Invalid Email or Password'});
         }
     });
 
 root.route('/signout')
     .get(function(req, res, next){
-        res.session.reset();
+        req.session_state.reset();
         res.redirect('/');
+    });
+
+root.route('/signup')
+    .get(function(req, res, next){
+        res.render('signup', {
+            title: 'Sign Up'
+        });
     });
 
 root.route('/test')

@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var clientSessions = require('client-sessions');
 
 // routers
 var root = require('./routes/index');
@@ -19,11 +20,17 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(clientSessions({secret: '@jrany7YVswp8Ou'}));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function(req, res, next){
+    res.locals.site = 'WikiStats';
+    next();
+});
 
 app.use('/', root);
 app.use('/api', api);
