@@ -17,20 +17,20 @@
 
 		// Acquire data from server
 		var tableName = "merp";
-		var tableInfo = null;
-		var tableData = null;
+		var tableInfo = [];
+		var tableData = [];
 		
 		$.ajax({
-			url: "api/metadata/" + tableName;
+		    url: "../api/metadata/" + tableName,
 			success: function(data) {
-				tableInfo( data.headers );
+				tableInfo = data.headers;
 			}
 		});
 		
 		$.ajax({
-			url: "api/data/" + tableName;
+		    url: "../api/data/" + tableName,
 			success: function(data) {
-				tableData( data.rows );
+				tableData = data.rows ;
 			}
 		});
 
