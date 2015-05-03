@@ -21,6 +21,7 @@
 		var tableData = [];
 		
 		$.ajax({
+			async: false,
 		    url: "../api/metadata/" + tableName,
 			success: function(data) {
 				tableInfo = data.headers;
@@ -28,6 +29,7 @@
 		});
 		
 		$.ajax({
+			async: false,
 		    url: "../api/data/" + tableName,
 			success: function(data) {
 				tableData = data.rows ;
