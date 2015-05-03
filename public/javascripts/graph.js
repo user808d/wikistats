@@ -1,5 +1,6 @@
 <!-- Google Chart Graphing Module - ver 1.0.0 -->
 <!-- See https://developers.google.com/chart/ -->
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
 
@@ -13,16 +14,39 @@
 	// instantiates the pie chart, passes in the data and draws it.
 	function drawChart() {
 
+
+		// Acquire data from server
+		var tableName = "merp";
+		var tableInfo = null;
+		var tableData = null;
+		
+		$.ajax({
+			url: "api/metadata/" + tableName;
+			success: function(data) {
+				tableInfo( data.headers );
+			}
+		});
+		
+		$.ajax({
+			url: "api/data/" + tableName;
+			success: function(data) {
+				tableData( data.rows );
+			}
+		});
+
+		console.log( tableInfo );
+		console.log( tableData );
+
 		// Create the data table.
-		var title = ""; //set to stat title
-		var dataArray = null; //acquire data from database
+		var title = "fake "; //set to stat title
+		var chartType = "Pie";
 		var data = new google.visualization.DataTable();
 		
 		// Set chart options
 		var options = {'title':title, 'width':400, 'height':300};
 		
 		// Populate table data in some fashion
-		data.addRows( dataArray );
+		data.addRows( tableData );
 
 		// Acquire wrapping div by ID
 		var divWrapper = document.getElementById('chart_div');
