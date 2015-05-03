@@ -15,7 +15,6 @@
 	function drawChart() {
 
 		var tableName = "testData";
-		var chartTitle = "Fake Title"; //set to stat title
 		var chartType = "Bar"; //set to chart type
 		var tableInfo = [];
 		var tableHeader = [];
@@ -55,7 +54,7 @@
 		var data = new google.visualization.arrayToDataTable( tableData );
 		
 		// Set chart options
-		var options = {'title':chartTitle, 'width':800, 'height':600};
+		var options = {'title':tableName, 'width':800, 'height':600};
 
 		// Acquire wrapping div by ID
 		var divWrapper = document.getElementById('chart_div');
