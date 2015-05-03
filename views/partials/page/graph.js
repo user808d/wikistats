@@ -14,12 +14,15 @@
 	// instantiates the pie chart, passes in the data and draws it.
 	function drawChart() {
 
-
-		// Acquire data from server
-		var tableName = "merp";
+		var tableName = "testData";
+		var chartTitle = "Fake Title"; //set to stat title
+		var chartType = "Bar"; //set to chart type
 		var tableInfo = [];
+		var tableHeader = [];
 		var tableData = [];
+
 		
+		// Acquire data from server
 		$.ajax({
 			async: false,
 		    url: "../api/metadata/" + tableName,
@@ -35,20 +38,24 @@
 				tableData = data.rows ;
 			}
 		});
-
-		console.log( tableInfo );
-		console.log( tableData );
-
+		
+		// Strip out table column titles
+		for (i=1; i<tableInfo.length; i++ ) {
+			tableHeader.push( tableInfo[i][0]);
+		}
+		
+		// Add table header to data
+		tableData.unshift( tableHeader );
+		
+		// Remove table ID column
+		for(i=1; i<tableData.length;i++)
+			tableData[i].splice(0,1);
+		
 		// Create the data table.
-		var title = "fake "; //set to stat title
-		var chartType = "Pie";
-		var data = new google.visualization.DataTable();
+		var data = new google.visualization.arrayToDataTable( tableData );
 		
 		// Set chart options
-		var options = {'title':title, 'width':400, 'height':300};
-		
-		// Populate table data in some fashion
-		data.addRows( tableData );
+		var options = {'title':chartTitle, 'width':800, 'height':600};
 
 		// Acquire wrapping div by ID
 		var divWrapper = document.getElementById('chart_div');
