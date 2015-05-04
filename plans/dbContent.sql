@@ -1,10 +1,10 @@
 use wikistats_db;
 
 -- Chart Types
-INSERT INTO ChartTypes (typeName) VALUES ('Bar');
-INSERT INTO ChartTypes (typeName) VALUES ('Line');
-INSERT INTO ChartTypes (typeName) VALUES ('Pie');
-INSERT INTO ChartTypes (typeName) VALUES ('Column');
+INSERT INTO Types (typeName) VALUES ('Bar');
+INSERT INTO Types (typeName) VALUES ('Line');
+INSERT INTO Types (typeName) VALUES ('Pie');
+INSERT INTO Types (typeName) VALUES ('Column');
 
 
 INSERT INTO Fields (fieldName) VALUES ('Statistics');
@@ -28,7 +28,7 @@ CREATE TABLE stats_GraduateSalaries ( id INT NOT NULL AUTO_INCREMENT, Major_Fiel
 
 LOAD DATA INFILE '/tmp/Graduate Salaries.csv' INTO TABLE stats_GraduateSalaries FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (Major_Field, Median_Salary, Standard_Error) SET ID=DEFAULT;
 
-INSERT INTO Stats (articleID, typeID, tableName) VALUES ((SELECT articleID FROM Articles WHERE title='College Major Salaries'), (SELECT typeID FROM ChartTypes WHERE typeName='Bar'), 'stats_GraduateSalaries');
+INSERT INTO Stats (articleID, typeID, tableName) VALUES ((SELECT articleID FROM Articles WHERE title='College Major Salaries'), (SELECT typeID FROM Types WHERE typeName='Bar'), 'stats_GraduateSalaries');
 
 
 -- Article Data: G-20 GINI Coefficients
@@ -45,7 +45,7 @@ CREATE TABLE stats_GiniCoeff ( id INT NOT NULL AUTO_INCREMENT, Country_Name VARC
 
 LOAD DATA INFILE '/tmp/G20 Gini Coefficient.csv' INTO TABLE stats_GiniCoeff FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (Country_Name, `1992`, `1993`, `1994`, `1995`, `1996`, `1997`, `1998`, `1999`, `2000`, `2001`, `2002`, `2003`, `2004`, `2005`, `2006`, `2007`, `2008`, `2009`, `2010`, `2011`, `2012`) SET ID=DEFAULT;
 
-INSERT INTO Stats (articleID, typeID, tableName) VALUES ((SELECT articleID FROM Articles WHERE title='G-20 GINI Coefficients'), (SELECT typeID FROM ChartTypes WHERE typeName='Line'), 'stats_GiniCoeff');
+INSERT INTO Stats (articleID, typeID, tableName) VALUES ((SELECT articleID FROM Articles WHERE title='G-20 GINI Coefficients'), (SELECT typeID FROM Types WHERE typeName='Line'), 'stats_GiniCoeff');
 
 
 -- Article Data: World Population
@@ -62,7 +62,7 @@ CREATE TABLE stats_WorldPopulation ( id INT NOT NULL AUTO_INCREMENT, Country VAR
 
 LOAD DATA INFILE '/tmp/World Population.csv' INTO TABLE stats_WorldPopulation FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (Country, Population) SET ID=DEFAULT;
 
-INSERT INTO Stats (articleID, typeID, tableName) VALUES ((SELECT articleID FROM Articles WHERE title='World Population'), (SELECT typeID FROM ChartTypes WHERE typeName='Pie'), 'stats_WorldPopulation');
+INSERT INTO Stats (articleID, typeID, tableName) VALUES ((SELECT articleID FROM Articles WHERE title='World Population'), (SELECT typeID FROM Types WHERE typeName='Pie'), 'stats_WorldPopulation');
 
 
 -- Article Data: Property Crime
@@ -79,6 +79,6 @@ CREATE TABLE stats_USPropertyCrime ( id INT NOT NULL AUTO_INCREMENT, Year YEAR(4
 
 LOAD DATA INFILE '/tmp/US Crime Estimates.csv' INTO TABLE stats_USPropertyCrime FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (Year, Total, Burglary, Larceny, Auto) SET ID=DEFAULT;
 
-INSERT INTO Stats (articleID, typeID, tableName) VALUES ((SELECT articleID FROM Articles WHERE title='Property Crime'), (SELECT typeID FROM ChartTypes WHERE typeName='Line'), 'stats_USPropertyCrime');
+INSERT INTO Stats (articleID, typeID, tableName) VALUES ((SELECT articleID FROM Articles WHERE title='Property Crime'), (SELECT typeID FROM Types WHERE typeName='Line'), 'stats_USPropertyCrime');
 
 INSERT INTO Edits (authorEmail, articleID) VALUES ('statuser@test.com', (SELECT articleID FROM Articles WHERE title = 'Property Crime'));
