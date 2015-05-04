@@ -14,8 +14,8 @@
 	// instantiates the pie chart, passes in the data and draws it.
 	function drawChart() {
 
-		var tableName = "testData";
-		var chartType = "Bar"; //set to chart type
+		var tableName = "stats_GiniCoeff";
+		var chartType = "Line"; //set to chart type
 		var tableInfo = [];
 		var tableHeader = [];
 		var tableData = [];
@@ -38,6 +38,11 @@
 			}
 		});
 		
+		console.log("metadata...");
+		console.log(tableInfo);
+		console.log("table data...");
+		console.log(tableData);
+		
 		// Strip out table column titles
 		for (i=1; i<tableInfo.length; i++ ) {
 			tableHeader.push( tableInfo[i][0]);
@@ -49,12 +54,20 @@
 		// Remove table ID column
 		for(i=1; i<tableData.length;i++)
 			tableData[i].splice(0,1);
+
+		console.log("formatted...");
+		console.log( tableData );
 		
 		// Create the data table.
 		var data = new google.visualization.arrayToDataTable( tableData );
 		
 		// Set chart options
-		var options = {'title':tableName, 'width':800, 'height':600};
+		var options = {
+			'title':tableName,
+			'width':800,
+			'height':600,
+			'interpolateNulls':true
+		};
 
 		// Acquire wrapping div by ID
 		var divWrapper = document.getElementById('chart_div');

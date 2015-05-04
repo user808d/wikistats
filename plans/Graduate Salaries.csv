@@ -1,0 +1,27 @@
+Major Field,Median Salary,Standard Error
+All fields,42000,500
+Science,36000,500
+Biological/ agricultural/ environmental life sciences,35000,500
+Agricultural/ food sciences,37000,4000
+Biological sciences,35000,500
+Environmental life sciences,33000,4000
+Computer/ information sciences,50000,1500
+Mathematics/ statistics,39000,1000
+Physical and related sciences,38000,3500
+"Chemistry, except biochemistry",36000,2500
+Earth/ atmospheric/ ocean sciencesb,39000,4500
+Physics/ astronomy,48000,2000
+Psychology,30000,500
+Social and related sciences,35000,500
+Economics,45000,1000
+Political and related sciences,34000,1000
+Sociology/ anthropology,34000,2500
+Other social sciences,33000,4500
+Engineering,58000,500
+Chemical engineering,65000,1500
+Civil/ architectural engineering,53000,1500
+Electrical/ computer engineering,62000,1500
+Industrial engineering,58000,1500
+Mechanical engineering,58000,500
+Other engineering,58000,2000
+Health,49000,1500
