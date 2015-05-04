@@ -40,8 +40,11 @@
 		
 		console.log("metadata...");
 		console.log(tableInfo);
+		
 		console.log("table data...");
 		console.log(tableData);
+		
+		/*
 		
 		// Strip out table column titles
 		for (i=1; i<tableInfo.length; i++ ) {
@@ -92,5 +95,7 @@
 		
 		// Draw chart, passing in configuration options
 		if (chart) chart.draw(data, options);
+		
+		*/
 	}
 </script>
