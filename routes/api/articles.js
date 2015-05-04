@@ -116,7 +116,7 @@ module.exports = function(db){
             + 'A.articleID = Ab.articleID AND (title LIKE \'%';
         var q_params = Object.keys(req.body).map(function(k){return req.body[k]});
         q_string += q_params[0] + '%\' OR content LIKE \'%'
-            + q_params[0] + '%\' OR authorEmail LIKE \'%' + q_params[0]
+            + q_params[0] + '%\' OR email LIKE \'%' + q_params[0]
             + '%\') ORDER BY pubDate DESC';
         res.locals = res.locals || {};
         db.select(q_string, [], function(q_res){

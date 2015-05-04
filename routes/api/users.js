@@ -79,7 +79,7 @@ module.exports = function(db){
         function(req, res, next){
             var q_string = 'UPDATE Users SET pwHash = ?, city = ?, state = ?, '
                 + 'zip = ?, position = ?, website = ?, fieldID = '
-                + '(SELECT fieldID FROM Fields WHERE fieldName = ?)WHERE email = ?';
+                + '(SELECT fieldID FROM Fields WHERE fieldName = ?) WHERE email = ?';
             var q_values = Object.keys(req.body).map(function(k){return req.body[k]});
             res.locals = res.locals || {};
             db.update(q_string, q_values, function(q_res){
@@ -97,7 +97,7 @@ module.exports = function(db){
     module.delete = [
         function(req, res, next){
             var q_string = 'SELECT tableName FROM Stats S, Articles A, Users U '
-                + 'WHERE S.articleID = A.articleID AND A.authorEmail = U.email '
+                + 'WHERE S.articleID = A.articleID AND A.email = U.email '
                 + 'AND U.?';
             res.locals = res.locals || {};
             db.select(q_string, req.body, function(q_res){

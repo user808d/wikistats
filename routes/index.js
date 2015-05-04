@@ -37,19 +37,19 @@ root.route('/articles/:articleID')
          });
 
 root.route('/articles/edit/:articleID')
-    .get(requireLogin, articles.find, urlRef.find,
+    .get(//requireLogin, articles.find, urlRef.find,
          function(req, res, next){
-             var article = res.locals.articles[0];
-             var refs = res.locals.urlReferences;
              res.render('articles/edit', {
-                 title: article.title,
-                 article: article,
-                 refs: refs
+                 title: 'things',
+                 article: {title: 'hue'},
+                 urls: [{urlReference: "lolol"}, {urlReference: "haha"}]
              });
          });
 
 root.route('/articles/new')
-    .get();
+    .get(requireLogin, function(req, res, next){
+        res.send('new article here');
+    });
 
 root.route('/signin')
     .get(function(req, res, next){
@@ -105,7 +105,7 @@ root.route('/search')
     });
 
 root.route('/dashboard/:email')
-    .get(requireLogin, users.find,
+    .get(requireLogin, users.find, articles.find, urlRef.find,
          function(req, res, next){
              var user = res.locals.user;
              res.render('dashboard/user', {

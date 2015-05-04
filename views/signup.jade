@@ -1,8 +1,8 @@
 extends layout
 
 block content
-  .container#login-container
-    form(method="post" url="api/users/")#login-form.well
+  .container
+    form(method="post" url="/api/users/").well
       h1 Create An Account
       p.subheading Please fill in account information.
       label Email
@@ -28,6 +28,7 @@ block content
       br
       label Field Name
         input(type="text", name="fieldName", id='pass-tf').form-control.span4.required
+      br
       br
       button(type="submit")#btn-login.btn.btn-primary
         i.icon-lock.icon-white
