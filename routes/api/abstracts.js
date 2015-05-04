@@ -44,5 +44,20 @@ module.exports = function(db){
         });
     }
 
+    module.delete = function(req, res, next){
+        var q_string = 'DELETE FROM Abstracts WHERE ? AND ?';
+        var q_values = [req.params, req.body];
+        res.locals = res.locals || {};
+        db.del(q_string, q_values, function(q_res){
+            if(q_res.result == 'q_error'){
+                res.status(500).send(q_res);
+            }
+            else{
+                res.locals.result = q_res.result;
+                next();
+            }
+        });
+    }
+
     return module;
 }

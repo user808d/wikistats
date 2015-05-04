@@ -37,7 +37,6 @@ module.exports = function(db){
             var q_string = 'INSERT INTO Fields SET fieldName = ?';
 
             if(req.body.fieldID){
-                console.log(req.body.fieldName);
                 delete req.body.fieldName;
                 next();
             }
@@ -69,22 +68,31 @@ module.exports = function(db){
         }
     ]
 
-    module.update = function(req, res, next){
-        var q_string = 'UPDATE Users SET pwHash = ?, city = ?, state = ?, zip = ?, '
-            + 'position = ?, website = ?, fieldID = '
-            + '(SELECT fieldID FROM Fields WHERE fieldName = ?) WHERE email = ?';
-        var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-        res.locals = res.locals || {};
-        db.update(q_string, q_values, function(q_res){
-            if(q_res.result == 'q_error'){
-                res.status(500).send(q_res);
-            }
-            else{
-                res.locals.result = q_res.result;
-                next();
-            }
-        });
-    }
+    module.update = [
+        function(req, res, next){
+            var q_string = 'INSERT INTO Fields SET fieldName = ?';
+
+            db.insert(q_string, req.body.fieldName, function(q_res){
+                    next();
+            });
+        },
+        function(req, res, next){
+            var q_string = 'UPDATE Users SET pwHash = ?, city = ?, state = ?, '
+                + 'zip = ?, position = ?, website = ?, fieldID = '
+                + '(SELECT fieldID FROM Fields WHERE fieldName = ?)WHERE email = ?';
+            var q_values = Object.keys(req.body).map(function(k){return req.body[k]});
+            res.locals = res.locals || {};
+            db.update(q_string, q_values, function(q_res){
+                if(q_res.result == 'q_error'){
+                    res.status(500).send(q_res);
+                }
+                else{
+                    res.locals.result = q_res.result;
+                    next();
+                }
+            });
+        }
+    ]
 
     module.delete = [
         function(req, res, next){
@@ -97,7 +105,7 @@ module.exports = function(db){
                     res.status(500).send(q_res);
                 }
                 else{
-                    res.locals = q_res;
+                    res.locals.tables = q_res.rows;
                     next();
                 }
             });
@@ -106,10 +114,10 @@ module.exports = function(db){
             var q_string = 'DROP TABLE IF EXISTS ??';
             var q_params = [];
 
-            if(res.locals.length > 0){
-                for(var i in res.locals)
-                    for(var k in res.locals[i])
-                        q_params.push(res.locals[i][k]);
+            if(res.locals.tables.length > 0){
+                for(var i in res.locals.tables)
+                    for(var k in res.locals.tables[i])
+                        q_params.push(res.locals.tables[i][k]);
 
                 db.del(q_string, q_params, function(q_res){
                     if(q_res.result == 'q_error'){

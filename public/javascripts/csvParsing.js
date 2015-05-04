@@ -4,8 +4,8 @@ function handleFileSelect(evt) {
     var file = evt.target.files[0];
     
     Papa.parse(file, {
-        header: true,
-        dynamicTyping: true,
+        header: false,
+        dynamicTyping: false,
         complete: function(results) {
             data = results;
         }

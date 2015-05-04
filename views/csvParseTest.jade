@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  .container
+    h1 Test
+      .input-group.input-group
+        input(type="file", name="files").input-control#csv-file
+  footer
+    include ./partials/page/jsdefaults
+    block jsdefaults
+    include ./partials/page/newArticle
+    block newArticle
+    script(src="/javascripts/csvParsing.js")

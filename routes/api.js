@@ -18,25 +18,27 @@ api.route('/fields')
 
 api.route('/users')
     .get(users.all, send) //get all users
-    .post(users.add, send) //new user
-    .put(users.update, send) //update user
-    .delete(users.delete, send); //remove user
+    .post(users.add, send); //new user
 api.route('/users/:email')
-    .get(users.find, send); //find user by email(id)
+    .get(users.find, send) //find user by email
+    .post(users.update, send); //update user
+api.route('/users/delete/:email')
+    .post(users.delete, send); //remove user
 
 api.route('/types')
     .get(types.all, send); //get all types
 
 api.route('/articles')
     .get(articles.all, send) //get all articles
-    .post(articles.add, send) //new article
-    .put(articles.update, send) //update article
-    .delete(articles.delete, send); //remove article
+    .post(articles.add, send); //new article
 api.route('/articles/:articleID')
-    .get(articles.find, send); //find article by id
-api.route('/articles/:authorEmail')
+    .get(articles.find, send) //find article by id
+    .post(articles.update, send); //update article
+api.route('/articles/delete/:articleID')
+    .post(articles.delete, send); //remove article
+api.route('/articles/author/:email')
     .get(articles.find, send); //find article by email
-api.route('/articles/:pubDate')
+api.route('/articles/date/:pubDate')
     .get(articles.find, send); //get articles by date
 
 api.route('/stats')
@@ -47,24 +49,28 @@ api.route('/stats/:articleID')
 api.route('/edits')
     .get(edits.all, send) //get all edits
     .post(edits.add, send); //new article edit
-api.route('/edits/:authorEmail')
+api.route('/edits/author/:email')
     .get(edits.find, send); //get all user edits by email
-api.route('/edits/:editDate')
+api.route('/edits/date/:editDate')
     .get(edits.find, send); //get all edits by date
-api.route('/edits/:articleID')
+api.route('/edits/article/:articleID')
     .get(edits.find, send); //get all edits on an article
 
 api.route('/abstracts')
-    .post(abstracts.add, send) //add abstract to article
-    .put(abstracts.update, send); //update an article's abstract
+    .post(abstracts.add, send); //add abstract to article
 api.route('/abstracts/:articleID')
-    .get(abstracts.find, send); //find an abstract by article id
+    .get(abstracts.find, send) //find an abstract by article id
+    .post(abstracts.update, send); //update an article's abstract
+api.route('/abstracts/delete/:articleID')
+    .post(abstracts.delete, send); //delete abstract by abstractID
 
 api.route('/urlReferences')
-    .post(urlRef.add, send) //add urlReference
-    .put(urlRef.update, send); //update urlReference
+    .post(urlRef.add, send); //add urlReference
 api.route('/urlReferences/:articleID')
-    .get(urlRef.find, send); //find urlReference by articleID
+    .get(urlRef.find, send) //find urlReference by articleID
+    .post(urlRef.update, send); //update urlReference
+api.route('/urlReferences/delete/:articleID')
+    .post(urlRef.delete, send); //delete url by url and articleID
 
 api.route('/search')
     .post(articles.findLike, send); //find articles similar to string provided

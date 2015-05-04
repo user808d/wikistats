@@ -31,10 +31,26 @@ module.exports = function(db){
 
     module.update = function(req, res, next) {
         var q_string = 'UPDATE URLReferences SET urlReference = ? '
-            + 'WHERE articleID = ? AND urlReference = ?';
+            + 'WHERE urlReference = ? AND ?';
         var q_values = Object.keys(req.body).map(function(k){return req.body[k]});
+        q_values.push(req.params);
         res.locals = res.locals || {};
         db.update(q_string, q_values, function(q_res){
+            if(q_res.result == 'q_error'){
+                res.status(500).send(q_res);
+            }
+            else{
+                res.locals.result = q_res.result;
+                next();
+            }
+        });
+    }
+
+    module.delete = function(req, res, next){
+        var q_string = 'DELETE FROM URLReferences WHERE ? AND ?';
+        var q_values = [req.body, req.params];
+        res.locals = res.locals || {};
+        db.del(q_string, q_values, function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }

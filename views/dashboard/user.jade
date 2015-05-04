@@ -31,3 +31,23 @@ block content
         | Submit
       div.clear-fix #{error}
       hr
+  .container
+    h2 Authored Articles
+      .row
+      -for(var i in articles)
+        -var article = articles[i]
+        .col-6.col-sm-6.col-lg-4
+              h2 #{article.title}
+              p 
+                | #{article.content}
+              p
+                a(href="/articles/#{article.articleID}" role="button" class="btn btn-default") View Details &raquo;
+  .container
+    h2 Edits
+      .row
+      -for(var i in edits)
+        -var edit = edits[i]
+        .col-6.col-sm-6.col-lg-4
+              h2 #{edit.authorEmail}
+              p 
+                | #{edit.editDate}
