@@ -3,13 +3,13 @@ module.exports = function(db){
 
     module.find = function(req, res, next) {
         var q_string = 'SELECT * FROM Abstracts WHERE ?';
-        req.locals = {};
+        res.locals = res.locals || {};
         db.select(q_string, req.params, function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
             else{
-                req.locals.abstracts = q_res.rows;
+                res.locals.abstracts = q_res.rows;
                 next();
             }
         });
@@ -17,13 +17,13 @@ module.exports = function(db){
 
     module.add = function(req, res, next) {
         var q_string = 'INSERT INTO Abstracts SET ?';
-        req.locals = {};
+        res.locals = res.locals || {};
         db.insert(q_string, req.body, function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
             else{
-                req.locals.abstracts = q_res.rows;
+                res.locals.result = q_res.result;
                 next();
             }
         });
@@ -32,13 +32,13 @@ module.exports = function(db){
     module.update = function(req, res, next) {
         var q_string = 'UPDATE Abstracts SET content = ? WHERE articleID = ?';
         var q_values = Object.keys(req.body).map(function(k){return req.body[k];});
-        req.locals = {};
+        res.locals = res.locals || {};
         db.update(q_string, q_values, function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
             else{
-                req.locals = q_res;
+                res.locals.result = q_res.result;
                 next();
             }
         });

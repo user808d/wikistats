@@ -10,7 +10,7 @@ var edits = require('./api/edits')(db);
 var abstracts = require('./api/abstracts')(db);
 var urlRef = require('./api/urlReferences.js')(db);
 
-var send = function(req, res, next){ res.send(req.locals); };
+var send = function(req, res, next){ res.send(res.locals); };
 
 api.route('/fields')
     .get(fields.all, send) //get all fields
@@ -76,7 +76,7 @@ api.post('/upload/', function(req, res, next) {
     
     req.body.headers = JSON.parse(req.body.headers);
     req.body.rows = JSON.parse(req.body.rows);
-    req.locals = {cols:[]};
+    res.locals = {cols:[]};
     var q_values = [];
     
     q_values.push(req.body.title);
@@ -84,7 +84,7 @@ api.post('/upload/', function(req, res, next) {
     for(var i in req.body.headers){
         q_string += '?? ' + req.body.headers[i] + ', ';
         q_values.push(i);
-        req.locals.cols.push(i);
+        res.locals.cols.push(i);
     }
     
     q_string += 'PRIMARY KEY (vid));';
@@ -104,7 +104,7 @@ api.post('/upload/', function(req, res, next) {
                       res.status(500).send(q_res);
                   }
                   else{
-                      req.locals = q_res;
+                      res.locals = q_res;
                       next();
                   }
               });
@@ -112,7 +112,7 @@ api.post('/upload/', function(req, res, next) {
 
 api.get('/metadata/:tableName', function(req, res, next){
     var q_string = 'DESCRIBE ??';
-    req.locals = {headers:[]};
+    res.locals = {headers:[]};
 
     db.select(q_string, req.params.tableName, function(q_res){
         if(q_res.result == 'q_error'){
@@ -120,7 +120,7 @@ api.get('/metadata/:tableName', function(req, res, next){
         }
         else{
             for(var i in q_res.rows)
-                req.locals.headers.push(
+                res.locals.headers.push(
                     [q_res.rows[i]['Field'],
                      q_res.rows[i]['Type']]
                 );
@@ -131,7 +131,7 @@ api.get('/metadata/:tableName', function(req, res, next){
 
 api.get('/data/:tableName', function(req, res, next){
     var q_string = 'SELECT * FROM ??';
-    req.locals = {rows:[]};
+    res.locals = {rows:[]};
     db.select(q_string, req.params.tableName, function(q_res){
         if(q_res.result == 'q_error'){
             res.status(500).send(q_res);
@@ -142,7 +142,7 @@ api.get('/data/:tableName', function(req, res, next){
                 for(var k in q_res.rows[i]){
                     values.push(q_res.rows[i][k]);
                 }
-                req.locals.rows.push(values);
+                res.locals.rows.push(values);
             }
             next();
         }        

@@ -2,32 +2,32 @@ extends layout
 
 block content
   .container#login-container
-    form(method="post" url="api/users/")#login-form.well.span4
+    form(method="post" url="api/users/")#login-form.well
       h1 Create An Account
       p.subheading Please fill in account information.
-      label Email &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-        input(type="text", name="email", id='user-tf').span4.required
+      label Email
+        input(type="text", name="email", id='user-tf').form-control.span4.required
       br
-      label Password &nbsp
-        input(type="password", name="pwHash", id='pass-tf').span4.required
+      label Password
+        input(type="password", name="pwHash", id='pass-tf').form-control.span4.required
       br
       label City
-        input(type="text", name="city", id='user-tf').span4.required
+        input(type="text", name="city", id='user-tf').form-control.span4.required
       br
       label State
-        input(type="text", name="state", id='user-tf').span4.required
+        input(type="text", name="state", id='user-tf').form-control.span4.required
       br
       label Zip
-        input(type="text", name="city", id='user-tf').span4.required
+        input(type="number", name="zip", id='user-tf').form-control.span4.required
       br
       label Position
-        input(type="text", name="position", id='user-tf').span4.required
+        input(type="text", name="position", id='user-tf').form-control.span4.required
       br
       label Website
-        input(type="text", name="website", id='user-tf').span4.required
+        input(type="text", name="website", id='user-tf').form-control.span4.required
       br
       label Field Name
-        input(type="text", name="fieldName", id='pass-tf').span4.required
+        input(type="text", name="fieldName", id='pass-tf').form-control.span4.required
       br
       button(type="submit")#btn-login.btn.btn-primary
         i.icon-lock.icon-white

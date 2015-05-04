@@ -13,17 +13,17 @@ function requireLogin (req, res, next) {
 };
 
 /* GET home page. */
-root.get('/', articles.all, function(req, res, next) {
+root.get('/', articles.all, function(req, res, next){
     res.render('index', {
         title: 'Home',
-        articles: req.locals.articles
+        articles: res.locals.articles
     });
 });
 
 root.get('/articles/:articleID', requireLogin, articles.find, function(req, res, next){
     res.render('articles/show', {
-        title: req.locals.articles[0].title,
-        article: req.locals.articles[0]
+        title: res.locals.articles[0].title,
+        article: res.locals.articles[0]
     });
 });
 
@@ -55,11 +55,30 @@ root.route('/signup')
         res.render('signup', {
             title: 'Sign Up'
         });
+    })
+    .post(users.add, function(req, res, next){
+        if(res.locals.result){
+            res.redirect('/signin');
+        }
+        else{
+            res.render('signup', {
+                title: 'Sign Up',
+                error: 'Please check fields for errors.'
+            });
+        }
     });
 
-root.route('/test')
+root.route('/test/')
     .get(function(req, res, next){
-        res.render('test');
+        res.render('test');         
+    });
+
+root.route('/search')
+    .get(function(req, res, next){
+        res.render('search');
+    })
+    .post(articles.findLike, function(req, res, next){
+        res.send(res.locals);
     });
 
 module.exports = root;
