@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+  .container#login-container
+    form(method="post" url="users/#{user.email}")#login-form.well
+      h1 #{user.email} - Account Management
+      label Password
+        input(type="password", name="pwHash", id='pass-tf', value="#{user.pwHash}").form-control
+      br
+      label City
+        input(type="text", name="city", id='user-tf', value="#{user.city}").form-control
+      br
+      label State
+        input(type="text", name="state", id='user-tf', value="#{user.state}").form-control
+      br
+      label Zip
+        input(type="number", name="zip", id='user-tf', value="#{user.zip}").form-control
+      br
+      label Position
+        input(type="text", name="position", id='user-tf', value="#{user.position}").form-control
+      br
+      label Website
+        input(type="text", name="website", id='user-tf', value="#{user.website}").form-control
+      br
+      label Field Name
+        input(type="text", name="fieldName", id='user-tf', value="#{user.fieldName}").form-control
+      br
+      input(type="text", name="email", id='user-tf', hidden="true", value="#{user.email}")
+      button(type="submit")#btn-login.btn.btn-primary
+        i.icon-lock.icon-white
+        | Submit
+      div.clear-fix #{error}
+      hr

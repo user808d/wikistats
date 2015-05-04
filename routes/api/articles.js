@@ -60,10 +60,10 @@ module.exports = function(db){
     }
 
     module.find = function(req, res, next) {
-        var q_string = 'SELECT * FROM Articles A, Abstracts Ab, URLReferences U, '
+        var q_string = 'SELECT * FROM Articles A, Abstracts Ab, '
             + 'Stats S, Types T '
             + 'WHERE A.articleID = Ab.articleID AND A.? AND '
-            + 'A.articleID = S.articleID AND A.articleID = U.articleID';
+            + 'A.articleID = S.articleID';
         res.locals = res.locals || {};
         db.select(q_string, req.params, function(q_res){
             if(q_res.result == 'q_error'){

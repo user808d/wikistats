@@ -3,6 +3,7 @@ var root = express.Router();
 var db = require('../database');
 var articles = require('./api/articles')(db);
 var users = require('./api/users')(db);
+var urlRef = require('./api/urlReferences')(db);
 
 function requireLogin (req, res, next) {
   if (!req.session_state.user) {
@@ -20,11 +21,17 @@ root.get('/', articles.all, function(req, res, next){
     });
 });
 
-root.get('/articles/:articleID', requireLogin, articles.find, function(req, res, next){
-    res.render('articles/show', {
-        title: res.locals.articles[0].title,
-        article: res.locals.articles[0]
-    });
+root.get('/articles/:articleID', requireLogin, articles.find, urlRef.find,
+         function(req, res, next){
+             var article = res.locals.articles[0];
+             var refs = res.locals.urlReferences;
+             res.render('articles/show', {
+                 title: article.title,
+                 article: article,
+                 tableName: article.tableName,
+                 typeName: article.typeName,
+                 refs: refs
+             });
 });
 
 root.route('/signin')
@@ -76,9 +83,18 @@ root.route('/test/')
 root.route('/search')
     .get(function(req, res, next){
         res.render('search');
+    });
+
+root.route('/dashboard/:email')
+    .get(requireLogin, users.find, function(req, res, next){
+        var user = res.locals.user;
+        res.render('dashboard/user', {
+            title: 'Dashboard',
+            user: user
+        });
     })
-    .post(articles.findLike, function(req, res, next){
-        res.send(res.locals);
+    .post(requireLogin, users.update, function(req, res, next){
+        res.redirect('/dashboard/' + res.locals.user.email);
     });
 
 module.exports = root;

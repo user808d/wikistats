@@ -1,7 +1,7 @@
 block authorizedUser
 -if(user)
   li
-    a(href='#dashboard') Dashboard
+    a(href='/dashboard/#{user.email}') Dashboard
   li
     a(href='/signout') Sign Out
 -else

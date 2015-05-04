@@ -8,7 +8,7 @@ var articles = require('./api/articles')(db);
 var stats = require('./api/stats')(db);
 var edits = require('./api/edits')(db);
 var abstracts = require('./api/abstracts')(db);
-var urlRef = require('./api/urlReferences.js')(db);
+var urlRef = require('./api/urlReferences')(db);
 
 var send = function(req, res, next){ res.send(res.locals); };
 
