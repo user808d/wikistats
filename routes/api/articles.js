@@ -97,9 +97,8 @@ module.exports = function(db){
         var q_string = 'SELECT * FROM Articles A, Abstracts Ab, '
             + 'Stats S, Types T '
             + 'WHERE A.articleID = Ab.articleID AND A.? AND '
-            + 'A.articleID = S.articleID';
+            + 'A.articleID = S.articleID AND T.typeID = S.typeID';
         res.locals = res.locals || {};
-        console.log(req.params);
         db.select(q_string, req.params, function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
