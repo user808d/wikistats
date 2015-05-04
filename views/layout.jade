@@ -29,10 +29,8 @@ html(lang='en')
               a(href='/') Home
             li
               a(href='/search') Search
-            li
-              a(href='#dashboard') Dashboard
-            li.login-status
-              a(href='/signin') Sign In
+            include ./partials/page/authorizedUser.jade
+            block authorizedUser
         // /.nav-collapse
       // /.container
     // /.navbar

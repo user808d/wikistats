@@ -1,0 +1,9 @@
+block authorizedUser
+-if(user)
+  li
+    a(href='#dashboard') Dashboard
+  li
+    a(href='/signout') Sign Out
+-else
+  li
+    a(href='/signin') Sign In

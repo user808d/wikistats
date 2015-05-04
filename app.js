@@ -9,8 +9,6 @@ var clientSessions = require('client-sessions');
 // routers
 var root = require('./routes/index');
 var api = require('./routes/api');
-var search = require('./routes/search');
-var auth = require('./routes/auth');
 
 var app = express();
 
@@ -29,13 +27,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
     res.locals.site = 'WikiStats';
+    res.locals.user = req.session_state.user;
     next();
 });
 
 app.use('/', root);
 app.use('/api', api);
-app.use('/search', search);
-app.use('/login', auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -4,13 +4,13 @@ module.exports = function(db){
     module.all = function(req, res, next) {
         var q_string = 'SELECT * FROM Articles A, Abstracts Ab '
             + 'WHERE A.articleID = Ab.articleID';
-        req.locals = {};
+        res.locals = res.locals || {};
         db.select(q_string, [], function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
             else{
-                req.locals.articles = q_res.rows;
+                res.locals.articles = q_res.rows;
                 next();
             }
         });
@@ -18,13 +18,13 @@ module.exports = function(db){
  
     module.add = function(req, res, next) {
         var q_string = 'INSERT INTO Articles SET ?';
-
+        res.locals = res.locals || {};
         db.insert(q_string, req.body, function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
             else{
-                req.locals = q_res;
+                res.locals.result = q_res.result;
                 next();
             }
         });
@@ -33,13 +33,13 @@ module.exports = function(db){
     module.update = function(req, res, next) {
         var q_string = 'UPDATE Articles SET title = ? WHERE articleID = ?';
         var q_values = Object.keys(req.body).map(function(k){return req.body[k]});
-
+        res.locals = res.locals || {};
         db.update(q_string, q_values, function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
             else{
-                req.locals = q_res;
+                res.locals.result = q_res.result;
                 next();
             }
         });
@@ -47,13 +47,13 @@ module.exports = function(db){
 
     module.delete = function(req, res, next) {
         var q_string = 'DELETE FROM Articles WHERE ?';
-
+        res.locals = res.locals || {};
         db.insert(q_string, req.body, function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
             else{
-                req.locals = q_res;
+                res.locals.result = q_res.result;
                 next();
             }
         });
@@ -64,30 +64,32 @@ module.exports = function(db){
             + 'Stats S, Types T '
             + 'WHERE A.articleID = Ab.articleID AND A.? AND '
             + 'A.articleID = S.articleID AND A.articleID = U.articleID';
-        req.locals = {};
+        res.locals = res.locals || {};
         db.select(q_string, req.params, function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
             else{
-                req.locals.articles = q_res.rows;
+                res.locals.articles = q_res.rows;
                 next();
             }
         });
     }
 
     module.findLike = function(req, res, next){
-        var q_string = 'SELECT * FROM Articles, Abstracts WHERE title LIKE \'%';
+        var q_string = 'SELECT * FROM Articles A, Abstracts Ab WHERE '
+            + 'A.articleID = Ab.articleID AND (title LIKE \'%';
         var q_params = Object.keys(req.body).map(function(k){return req.body[k]});
-        for(var i in q_params) q_string += q_params[i];
-        q_string += '%\'';
-        req.locals = {};
-        db.select(q_string, q_params, function(q_res){
+        q_string += q_params[0] + '%\' OR content LIKE \'%'
+            + q_params[0] + '%\' OR authorEmail LIKE \'%' + q_params[0]
+            + '%\')';
+        res.locals = res.locals || {};
+        db.select(q_string, [], function(q_res){
             if(q_res.result == 'q_error'){
                 res.status(500).send(q_res);
             }
             else{
-                req.locals.articles = q_res.rows;
+                res.locals.articles = q_res.rows;
                 next();
             }
         });        
