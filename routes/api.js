@@ -35,7 +35,7 @@ api.route('/articles/:articleID')
     .get(articles.find, send) //find article by id
     .post(articles.update, send); //update article
 api.route('/articles/delete/:articleID')
-    .post(articles.delete, send); //remove article
+    .get(articles.delete, send); //remove article
 api.route('/articles/author/:email')
     .get(articles.find, send); //find article by email
 api.route('/articles/date/:pubDate')

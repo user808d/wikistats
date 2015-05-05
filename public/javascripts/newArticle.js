@@ -36,6 +36,12 @@ function submitURL(params){
     });
 }
 
+function removeArticle(articleID){
+    $.get('/api/articles/delete/' + articleID, function(res){
+        console.log(res);
+    });
+}
+
 function publishArticle(evt){
     var parameters = {},
         headers = [],
@@ -53,26 +59,33 @@ function publishArticle(evt){
         if(data.data[i][0] !== '') rows.push(data.data[i]);
     
     $.post('/api/articles', parameters, function(res){
-        var newAb = {},
+        if(res.result === 'success'){
+            var newAb = {},
             newStat = {},
             newUrl = {},
             csvUpload = {};
 
-        csvUpload.rows = rows;
-        csvUpload.headers = headers;
-        newAb.articleID = res.articleID;
-        newStat.articleID = res.articleID;
-        newUrl.articleID = res.articleID;
-        newUrl.urlReference = $('#urlReference').val();
-        newAb.content = $('#content').val();
-        newStat.typeID = $('input[name="group1"]:checked').val();
-        newStat.tableName = $('#tableName').val();
-        csvUpload.title = newStat.tableName;
-    
-        submitAbstract(newAb);
-        submitStat(newStat);
-        submitCSV({data:JSON.stringify(csvUpload)});
-        submitURL(newUrl);
+            csvUpload.rows = rows;
+            csvUpload.headers = headers;
+            newAb.articleID = res.articleID;
+            newStat.articleID = res.articleID;
+            newUrl.articleID = res.articleID;
+            newUrl.urlReference = $('#urlReference').val();
+            newAb.content = $('#content').val();
+            newStat.typeID = $('input[name="group1"]:checked').val();
+            newStat.tableName = $('#tableName').val();
+            csvUpload.title = newStat.tableName;
+            
+            submitAbstract(newAb);
+            submitStat(newStat);
+            submitCSV({data:JSON.stringify(csvUpload)});
+            submitURL(newUrl);
+        }
+        else console.log(res);
+    }).done(function(res){
+        if(res.result === 'success')
+            window.location = "/search";
+        else removeArticle(res.articleID);
     });
 }
 
