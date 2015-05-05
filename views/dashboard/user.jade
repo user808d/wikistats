@@ -39,7 +39,7 @@ block content
     .row
     -for(var i in articles)
       -var article = articles[i]
-      .col-6.col-sm-6.col-lg-4
+      div(id="article#{article.articleID}").col-6.col-sm-6.col-lg-4
          h3 #{article.title}           
          p
            a(href="/articles/#{article.articleID}" role="button" class="btn btn-default") 
@@ -48,7 +48,7 @@ block content
            a(href="/articles/edit/#{article.articleID}" role="button" class="btn btn-info")
              | Edit
            | &nbsp&nbsp
-           a(href="/api/articles/delete/#{article.articleID}" role="button" class="btn btn-danger") 
+           button(role="button" onclick="deleteArticle(#{article.articleID})" class="btn btn-danger") 
              | Delete
   .container
     h2 Edits
@@ -68,4 +68,9 @@ block content
       function hashme() {
         var hash = CryptoJS.SHA256( $("#pass-tf").val() ).toString(CryptoJS.enc.Hex);
         $("#pass-tf").val( hash );
+      }
+      
+      function deleteArticle(id){
+        $.get("/api/articles/delete/" + id, function(res){console.log(res)});
+        $("#article" + id).hide();
       }
