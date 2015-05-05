@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS Abstracts
 
 CREATE TABLE IF NOT EXISTS URLReferences
 (
-	urlReference VARCHAR(50) NOT NULL,
+	urlReference VARCHAR(100) NOT NULL,
 	articleID SMALLINT NOT NULL,
 	FOREIGN KEY ( articleID ) REFERENCES Articles (articleID) ON DELETE CASCADE,
 	PRIMARY KEY (urlReference, articleID)
