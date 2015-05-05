@@ -26,28 +26,38 @@ block content
         input(type="text", name="fieldName", id='user-tf', value="#{user.fieldName}").form-control
       br
       input(type="text", name="email", id='user-tf', hidden="true", value="#{user.email}")
+      br
       button(type="submit")#btn-login.btn.btn-primary
         i.icon-lock.icon-white
         | Submit
+      | &nbsp&nbsp
+      a(href="/dashboard/delete/#{user.email}" role="button").btn.btn-danger
+        | Delete Account
       div.clear-fix #{error}
-      hr
   .container
     h2 Authored Articles
-      .row
-      -for(var i in articles)
-        -var article = articles[i]
-        .col-6.col-sm-6.col-lg-4
-              h2 #{article.title}
-              p 
-                | #{article.content}
-              p
-                a(href="/articles/#{article.articleID}" role="button" class="btn btn-default") View Details &raquo;
+    .row
+    -for(var i in articles)
+      -var article = articles[i]
+      .col-6.col-sm-6.col-lg-4
+         h3 #{article.title}           
+         p
+           a(href="/articles/#{article.articleID}" role="button" class="btn btn-default") 
+             | View Details &raquo;
+           | &nbsp&nbsp
+           a(href="/articles/edit/#{article.articleID}" role="button" class="btn btn-info")
+             | Edit
+           | &nbsp&nbsp
+           a(href="/api/articles/delete/#{article.articleID}" role="button" class="btn btn-danger") 
+             | Delete
   .container
     h2 Edits
-      .row
-      -for(var i in edits)
-        -var edit = edits[i]
-        .col-6.col-sm-6.col-lg-4
-              h2 #{edit.authorEmail}
-              p 
-                | #{edit.editDate}
+    .row
+    -for(var i in edits)
+      -var edit = edits[i]
+      .col-6.col-sm-6.col-lg-4
+        h3 #{edit.title}
+        p 
+          | #{edit.editDate}
+   footer
+     include ../partials/page/jsdefaults

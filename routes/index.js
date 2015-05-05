@@ -22,6 +22,13 @@ root.get('/', articles.all, function(req, res, next){
     });
 });
 
+root.route('/articles/new')
+    .get(requireLogin, function(req, res, next){
+        res.render('articles/new', {
+            title: 'Publish'
+        });
+    });
+
 root.route('/articles/:articleID')
     .get(requireLogin, articles.find, urlRef.find,
          function(req, res, next){
@@ -37,19 +44,16 @@ root.route('/articles/:articleID')
          });
 
 root.route('/articles/edit/:articleID')
-    .get(//requireLogin, articles.find, urlRef.find,
+    .get(requireLogin, articles.find, urlRef.find,
          function(req, res, next){
+             var article = res.locals.articles[0];
+             var urls = res.locals.urlReferences;
              res.render('articles/edit', {
-                 title: 'things',
-                 article: {title: 'hue'},
-                 urls: [{urlReference: "lolol"}, {urlReference: "haha"}]
+                 title: article.title,
+                 article: article,
+                 urls: urls
              });
          });
-
-root.route('/articles/new')
-    .get(requireLogin, function(req, res, next){
-        res.send('new article here');
-    });
 
 root.route('/signin')
     .get(function(req, res, next){
@@ -104,13 +108,16 @@ root.route('/search')
         });
     });
 
+root.route('/dashboard/delete/:email')
+    .post(requireLogin, users.delete, function(req, res, next){
+        res.redirect('/signout');
+    });
+
 root.route('/dashboard/:email')
-    .get(requireLogin, users.find, articles.find, urlRef.find,
+    .get(requireLogin, users.find, articles.find, edits.find,
          function(req, res, next){
-             var user = res.locals.user;
              res.render('dashboard/user', {
-                 title: 'Dashboard',
-                 user: user
+                 title: 'Dashboard'
              });
          })
     .post(requireLogin, users.update, function(req, res, next){

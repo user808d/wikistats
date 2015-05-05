@@ -19,7 +19,8 @@ block content
           p
             | #{article.email}
           br
-          a(href='/article/edit/#{article.articleID}') EDIT
+          a(href='/articles/edit/#{article.articleID}').btn.btn-info
+            | EDIT
       
       
     footer

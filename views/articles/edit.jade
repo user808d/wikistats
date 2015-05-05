@@ -3,15 +3,15 @@ extends ../layout
 block content
   .container.well
     h1 Editing #{article.title}
-    p.subheading Make appropriate changes.
     br
     h3 Article
     label Title
-    input(type="text", name="email", id='user-tf').form-control
+    input(type="text", name="email", id='user-tf', value="#{article.title}").form-control
     br
     h3 Abstract
     label Content
     textarea(rows="4", name="content", id='pass-tf').form-control
+      | #{article.content}
     br
     h3 References
     -for(var i in urls){

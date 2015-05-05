@@ -32,7 +32,8 @@ module.exports = function(db){
     }
 
     module.find = function(req, res, next) {
-        var q_string = 'SELECT * FROM Edits WHERE ?';
+        var q_string = 'SELECT editDate, title FROM Edits E, Articles A '
+            + 'WHERE E.articleID = A.articleID AND E.?';
         res.locals = res.locals || {};
         db.select(q_string, req.params, function(q_res){
             if(q_res.result == 'q_error'){
