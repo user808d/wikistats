@@ -3,6 +3,8 @@ use `wikistats_db`;
 
 GRANT ALL ON `wikistats_db`.* to 'wstatsuser'@'localhost' identified by 'WikiStats15!';
 
+SET sql_mode='ANSI_QUOTES';
+
 CREATE TABLE IF NOT EXISTS Fields
 (
         fieldID SMALLINT NOT NULL AUTO_INCREMENT,
