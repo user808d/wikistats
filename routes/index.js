@@ -110,7 +110,7 @@ root.route('/search')
     });
 
 root.route('/dashboard/delete/:email')
-    .post(requireLogin, users.delete, function(req, res, next){
+    .get(requireLogin, users.delete, function(req, res, next){
         res.redirect('/signout');
     });
 
