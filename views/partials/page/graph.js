@@ -2,6 +2,13 @@
 <!-- See https://developers.google.com/chart/ -->
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js"></script>
+<script type="text/javascript">
+	var password = "1234567890"
+	var hash = CryptoJS.SHA1( password ).toString(CryptoJS.enc.Hex);
+	console.log( hash );
+</script>
 <script type="text/javascript">
 
 	// Load the Visualization API and the corechart package (pie, bar, line, & column).
@@ -14,8 +21,8 @@
 	// instantiates the pie chart, passes in the data and draws it.
 	function drawChart() {
 
-		var tableName = "stats_GiniCoeff";
-		var chartType = "Line"; //set to chart type
+		var tableName = "stats_WorldPopulation";
+		var chartType = "Pie"; //set to chart type
 		var tableInfo = [];
 		var tableHeader = [];
 		var tableData = [];
