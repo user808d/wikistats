@@ -10,7 +10,7 @@ INSERT INTO Types (typeName) VALUES ('Column');
 
 INSERT INTO Fields (fieldName) VALUES ('Statistics');
 
-INSERT INTO Users (email, pwHash, city, state, zip, position, website, fieldID) VALUES ('statuser@test.com', '1234567890', 'Rolla', 'MO', 65401, 'Student', 'http://math.mst.edu', (SELECT fieldID FROM Fields WHERE fieldName = 'Statistics') );
+INSERT INTO Users (email, pwHash, city, state, zip, position, website, fieldID) VALUES ('statuser@test.com', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 'Rolla', 'MO', 65401, 'Student', 'http://math.mst.edu', (SELECT fieldID FROM Fields WHERE fieldName = 'Statistics') );
 
 
 -- Article Data: College Major Salaries
@@ -42,9 +42,9 @@ INSERT INTO URLReferences (articleID, urlReference) VALUES ((SELECT articleID FR
 
 INSERT INTO URLReferences (articleID, urlReference) VALUES ((SELECT articleID FROM Articles WHERE title = 'G-20 GINI Coefficients'), 'https://g20.org/about-g20/g20-members/');
 
-CREATE TABLE stats_GiniCoeff ( id INT NOT NULL AUTO_INCREMENT, Year SMALLINT NOT NULL, Argentina FLOAT(4,2) DEFAULT NULL, Australia FLOAT(4,2) DEFAULT NULL, Brazil FLOAT(4,2) DEFAULT NULL, Canada FLOAT(4,2) DEFAULT NULL, China FLOAT(4,2) DEFAULT NULL, France FLOAT(4,2) DEFAULT NULL, Germany FLOAT(4,2) DEFAULT NULL, India FLOAT(4,2) DEFAULT NULL, Indonesia FLOAT(4,2) DEFAULT NULL, Italy FLOAT(4,2) DEFAULT NULL, Japan FLOAT(4,2) DEFAULT NULL, Mexico FLOAT(4,2) DEFAULT NULL, "Russian Federation" FLOAT(4,2) DEFAULT NULL, "South Africa" FLOAT(4,2) DEFAULT NULL, 	Turkey FLOAT(4,2) DEFAULT NULL, "United Kingdom" FLOAT(4,2) DEFAULT NULL, "United States" FLOAT(4,2) DEFAULT NULL, PRIMARY KEY (id) );
+CREATE TABLE stats_GiniCoeff ( id INT NOT NULL AUTO_INCREMENT, Year SMALLINT NOT NULL, Argentina FLOAT(4,2) DEFAULT NULL, Australia FLOAT(4,2) DEFAULT NULL, Brazil FLOAT(4,2) DEFAULT NULL, Canada FLOAT(4,2) DEFAULT NULL, China FLOAT(4,2) DEFAULT NULL, France FLOAT(4,2) DEFAULT NULL, Germany FLOAT(4,2) DEFAULT NULL, India FLOAT(4,2) DEFAULT NULL, Indonesia FLOAT(4,2) DEFAULT NULL, Italy FLOAT(4,2) DEFAULT NULL, Mexico FLOAT(4,2) DEFAULT NULL, "Russian Federation" FLOAT(4,2) DEFAULT NULL, "South Africa" FLOAT(4,2) DEFAULT NULL, Turkey FLOAT(4,2) DEFAULT NULL, "United Kingdom" FLOAT(4,2) DEFAULT NULL, "United States" FLOAT(4,2) DEFAULT NULL, PRIMARY KEY (id) );
 
-LOAD DATA INFILE '/tmp/G20 Gini Coefficient.csv' INTO TABLE stats_GiniCoeff FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (Year, Argentina, Australia, Brazil, Canada, China, France, Germany, India, Indonesia, Italy, Japan, Mexico, "Russian Federation", "South Africa", Turkey, "United Kingdom", "United States") SET ID=DEFAULT;
+LOAD DATA INFILE '/tmp/G20 Gini Coefficient.csv' INTO TABLE stats_GiniCoeff FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS (Year, Argentina, Australia, Brazil, Canada, China, France, Germany, India, Indonesia, Italy, Mexico, "Russian Federation", "South Africa", Turkey, "United Kingdom", "United States") SET ID=DEFAULT;
 
 INSERT INTO Stats (articleID, typeID, tableName) VALUES ((SELECT articleID FROM Articles WHERE title='G-20 GINI Coefficients'), (SELECT typeID FROM Types WHERE typeName='Line'), 'stats_GiniCoeff');
 
