@@ -100,7 +100,7 @@ module.exports = function(db){
                 + 'WHERE S.articleID = A.articleID AND A.email = U.email '
                 + 'AND U.?';
             res.locals = res.locals || {};
-            db.select(q_string, req.body, function(q_res){
+            db.select(q_string, req.params, function(q_res){
                 if(q_res.result == 'q_error'){
                     res.status(500).send(q_res);
                 }
@@ -131,7 +131,7 @@ module.exports = function(db){
         function(req, res, next){
             var q_string = 'DELETE FROM Users WHERE ?';
             res.locals = res.locals || {};
-            db.del(q_string, req.body, function(q_res){
+            db.del(q_string, req.params, function(q_res){
                 if(q_res.result == 'q_error'){
                     res.status(500).send(q_res);
                 }

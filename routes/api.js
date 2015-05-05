@@ -23,7 +23,7 @@ api.route('/users/:email')
     .get(users.find, send) //find user by email
     .post(users.update, send); //update user
 api.route('/users/delete/:email')
-    .post(users.delete, send); //remove user
+    .get(users.delete, send); //remove user
 
 api.route('/types')
     .get(types.all, send); //get all types
