@@ -70,7 +70,7 @@ module.exports = function(db){
                     for(var k in res.locals.tables[i])
                         q_params.push(res.locals.tables[i][k]);
 
-                db.del(q_string, q_params, function(q_res){
+                db.del(q_string, [q_params], function(q_res){
                     if(q_res.result == 'q_error'){
                         res.status(500).send(q_res);
                     }

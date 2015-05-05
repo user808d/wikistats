@@ -59,13 +59,13 @@ block content
         h3 #{edit.title}
         p 
           | #{edit.editDate}
-   footer
-     script(src='http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js').
-	 script(src='http://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js').
-     include ../partials/page/jsdefaults
+  footer
+    script(src='http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js').
+    script(src='http://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js').
+    include ../partials/page/jsdefaults
      
-     script.
-       function hashme() {
-         var hash = CryptoJS.SHA256( $("#pass-tf").val() ).toString(CryptoJS.enc.Hex);
-         $("#pass-tf").val( hash );
-       }
+    script.
+      function hashme() {
+        var hash = CryptoJS.SHA256( $("#pass-tf").val() ).toString(CryptoJS.enc.Hex);
+        $("#pass-tf").val( hash );
+      }

@@ -96,8 +96,8 @@ module.exports = function(db){
 
     module.delete = [
         function(req, res, next){
-            var q_string = 'SELECT tableName FROM Stats S, Articles A, Users U '
-                + 'WHERE S.articleID = A.articleID AND A.email = U.email '
+            var q_string = 'SELECT DISTINCT tableName FROM Stats S, Articles A, '
+                + 'Users U WHERE S.articleID = A.articleID AND A.email = U.email '
                 + 'AND U.?';
             res.locals = res.locals || {};
             db.select(q_string, req.params, function(q_res){
@@ -111,19 +111,15 @@ module.exports = function(db){
             });
         },
         function(req, res, next){
-            var q_string = 'DROP TABLE IF EXISTS ';
+            var q_string = 'DROP TABLE IF EXISTS ??';
             var q_params = [];
 
             if(res.locals.tables.length > 0){
-                for(var i in res.locals.tables){
-                    for(var k in res.locals.tables[i]){
+                for(var i in res.locals.tables)
+                    for(var k in res.locals.tables[i])
                         q_params.push(res.locals.tables[i][k]);
-                        q_string += '??';
-                    }
-                    if(i < res.locals.tables.length - 1) q_string += ', ';
-                }
 
-                db.del(q_string, q_params, function(q_res){
+                db.del(q_string, [q_params], function(q_res){
                     if(q_res.result == 'q_error'){
                         res.status(500).send(q_res);
                     }

@@ -79,38 +79,41 @@ api.route('/search')
 api.post('/upload/', function(req, res, next) {
     var q_string = 'CREATE TABLE IF NOT EXISTS ?? '
         + '( vid INT AUTO_INCREMENT, ';
-    
-    req.body.headers = JSON.parse(req.body.headers);
-    req.body.rows = JSON.parse(req.body.rows);
-    res.locals = {cols:[]};
+    req.body = JSON.parse(req.body.data);
+    res.locals = res.locals || {};
     var q_values = [];
-    
+    res.locals.cols = [];
     q_values.push(req.body.title);
 
-    for(var i in req.body.headers){
-        q_string += '?? ' + req.body.headers[i] + ', ';
-        q_values.push(i);
-        res.locals.cols.push(i);
-    }
+    for(var i in req.body.headers)
+        for(var k in req.body.headers[i]){
+            q_string += '?? ' + req.body.headers[i][k] + ', ';
+            q_values.push(k);
+            res.locals.cols.push(k);
+        }
     
-    q_string += 'PRIMARY KEY (vid));';
+    q_string += 'PRIMARY KEY ( vid ))';
 
     db.insert(q_string, q_values, function(q_res){
         if(q_res.result == 'q_error'){
             res.status(500).send(q_res);
         }
-        else next();
+        else{
+            next();
+        }
         });
 }, function(req, res, next){
-    var q_string = 'INSERT INTO ??(??) VALUES?';
+    var q_string = 'INSERT INTO ??(??) VALUES ?';
     
-    db.select(q_string, [req.body.title, req.locals.cols, req.body.rows],
+    db.select(q_string, [req.body.title, res.locals.cols, req.body.rows],
               function(q_res){
                   if(q_res.result == 'q_error'){
+                      console.log(q_res);
                       res.status(500).send(q_res);
                   }
                   else{
-                      res.locals = q_res;
+                      console.log(q_res);
+                      res.locals.result = q_res.result;
                       next();
                   }
               });
@@ -118,7 +121,8 @@ api.post('/upload/', function(req, res, next) {
 
 api.get('/metadata/:tableName', function(req, res, next){
     var q_string = 'DESCRIBE ??';
-    res.locals = {headers:[]};
+    res.locals = res.locals || {};
+    res.locals.headers = [];
 
     db.select(q_string, req.params.tableName, function(q_res){
         if(q_res.result == 'q_error'){
@@ -137,7 +141,8 @@ api.get('/metadata/:tableName', function(req, res, next){
 
 api.get('/data/:tableName', function(req, res, next){
     var q_string = 'SELECT * FROM ??';
-    res.locals = {rows:[]};
+    res.locals = res.locals || {};
+    res.locals.rows = [];
     db.select(q_string, req.params.tableName, function(q_res){
         if(q_res.result == 'q_error'){
             res.status(500).send(q_res);

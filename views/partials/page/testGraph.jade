@@ -2,66 +2,64 @@ block testGraph
 script(src='http://code.jquery.com/jquery-latest.js').
 script(src='http://www.google.com/jsapi').
 script.
-	google.load('visualization', '1', {'packages':['corechart']});
-	google.setOnLoadCallback(drawChart);
-	function drawChart() {
-		var tableInfo = [];
-		var tableHeader = [];
-		var tableData = [];
+        google.load('visualization', '1', {'packages':['corechart']});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+                var tableInfo = [];
+                var tableHeader = [];
+                var tableData = [];
 
-		$.ajax({
-			async: false,
-			url: "../api/metadata/" + '#{tableName}',
-			success: function(data) {
-				tableInfo = data.headers;
-			}
-		});
+                $.ajax({
+                        async: false,
+                        url: "../api/metadata/" + '#{tableName}',
+                        success: function(data) {
+                                tableInfo = data.headers;
+                        }
+                });
 
-		$.ajax({
-			async: false,
-			url: "../api/data/" + '#{tableName}',
-			success: function(data) {
-				tableData = data.rows;
-			}
-		});
+                $.ajax({
+                        async: false,
+                        url: "../api/data/" + '#{tableName}',
+                        success: function(data) {
+                                tableData = data.rows;
+                        }
+                });
+                
+                for (i=1; i<tableInfo.length; i++ )
+                        tableHeader.push(tableInfo[i][0]);
 
-		console.log(tableData);
-		
-		for (i=1; i<tableInfo.length; i++ )
-			tableHeader.push(tableInfo[i][0]);
+                tableData.unshift( tableHeader );
 
-		tableData.unshift( tableHeader );
+                for(i=1; i<tableData.length;i++)
+                        tableData[i].splice(0,1);
 
-		for(i=1; i<tableData.length;i++)
-			tableData[i].splice(0,1);
+                var data = new google.visualization.arrayToDataTable( tableData );
 
-		var data = new google.visualization.arrayToDataTable( tableData );
+                // Set chart options
+                var options = {
+                        'title':'#{article.title}',
+                        'width':800,
+                        'height':600,
+                        'interpolateNulls':true,
+                };
 
-		// Set chart options
-		var options = {
-			'title':'#{article.title}',
-			'width':800,
-			'height':600,
-			'interpolateNulls':true,
-		};
+                var divWrapper = document.getElementById('chart_div');
 
-		var divWrapper = document.getElementById('chart_div');
+                var chart = null;
 
-		var chart = null;
+                if ('#{typeName}' === "Pie")
+                        chart = new google.visualization.PieChart(divWrapper);
 
-		if ('#{typeName}' === "Pie")
-			chart = new google.visualization.PieChart(divWrapper);
+                else if ('#{typeName}' === "Line") {
+                        chart = new google.visualization.LineChart(divWrapper);
+                }
 
-		else if ('#{typeName}' === "Line") {
-			chart = new google.visualization.LineChart(divWrapper);
-		}
+                else if ('#{typeName}' === "Bar" ) {
+                        chart = new google.visualization.BarChart(divWrapper);
+                }
 
-		else if ('#{typeName}' === "Bar" ) {
-			chart = new google.visualization.BarChart(divWrapper);
-		}
-
-		else if ('#{typeName}' === "Column") {
-			chart = new google.visualization.ColumnChart(divWrapper);
-		}
-		if (chart) chart.draw(data, options);
-	};
+                else if ('#{typeName}' === "Column") {
+                        chart = new google.visualization.ColumnChart(divWrapper);
+                }
+                if (chart) chart.draw(data, options);
+        };

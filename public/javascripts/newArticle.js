@@ -38,8 +38,8 @@ function submitURL(params){
 
 function publishArticle(evt){
     var parameters = {},
-        preHeaders = [],
-        preRows = [];
+        headers = [],
+        rows = [];
     
     parameters.title = $('#title').val();
     parameters.email = $('#email').val();
@@ -47,19 +47,19 @@ function publishArticle(evt){
     for(var i in data.data[0]){
         var x = {};
         x[data.data[0][i]] =  headerTypes[i];
-        preHeaders.push(x);
+        headers.push(x);
     }
     for(i=1; i < data.data.length; i++)
-        preRows.push(data.data[i]);
+        if(data.data[i][0] !== '') rows.push(data.data[i]);
     
     $.post('/api/articles', parameters, function(res){
         var newAb = {},
             newStat = {},
             newUrl = {},
             csvUpload = {};
-        console.log(preRows, preHeaders);
-        csvUpload.rows = preRows;
-        csvUpload.headers = preHeaders;
+
+        csvUpload.rows = rows;
+        csvUpload.headers = headers;
         newAb.articleID = res.articleID;
         newStat.articleID = res.articleID;
         newUrl.articleID = res.articleID;
@@ -68,10 +68,10 @@ function publishArticle(evt){
         newStat.typeID = $('input[name="group1"]:checked').val();
         newStat.tableName = $('#tableName').val();
         csvUpload.title = newStat.tableName;
-        
+    
         submitAbstract(newAb);
         submitStat(newStat);
-        submitCSV(csvUpload);
+        submitCSV({data:JSON.stringify(csvUpload)});
         submitURL(newUrl);
     });
 }
