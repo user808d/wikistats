@@ -47,18 +47,18 @@ script.
 
 		var chart = null;
 
-		if ('#{typeName}' == "Pie")
+		if ('#{typeName}' === "Pie")
 			chart = new google.visualization.PieChart(divWrapper);
 
-		else if ('#{typeName}' == "Line") {
+		else if ('#{typeName}' === "Line") {
 			chart = new google.visualization.LineChart(divWrapper);
 		}
 
-		else if ('#{typeName}' == "Bar" ) {
+		else if ('#{typeName}' === "Bar" ) {
 			chart = new google.visualization.BarChart(divWrapper);
 		}
 
-		else if ('#{typeName}' == "Column") {
+		else if ('#{typeName}' === "Column") {
 			chart = new google.visualization.ColumnChart(divWrapper);
 		}
 		if (chart) chart.draw(data, options);

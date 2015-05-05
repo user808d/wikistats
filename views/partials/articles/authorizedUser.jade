@@ -1,0 +1,5 @@
+block authorizedUser
+if(user)
+  br
+  a(href='/articles/edit/#{article.articleID}').btn.btn-info
+    | EDIT

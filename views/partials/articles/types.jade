@@ -1,0 +1,7 @@
+block types
+-for(var i in types)
+  -var type = types[i]
+  .radio
+    label
+      input(type="radio" id="#{type.typeName}" value="#{type.typeID}")
+      | #{type.typeName}

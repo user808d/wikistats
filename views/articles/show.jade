@@ -18,10 +18,7 @@ block content
           h3 Author
           p
             | #{article.email}
-          br
-          a(href='/articles/edit/#{article.articleID}').btn.btn-info
-            | EDIT
-      
-      
+          include ../partials/articles/authorizedUser
+          block authorizedUser
     footer
       include ../partials/page/testGraph.jade

@@ -25,6 +25,7 @@ module.exports = function(db){
             }
             else{
                 res.locals.result = q_res.result;
+                res.locals.articleID = q_res.id;
                 next();
             }
         });

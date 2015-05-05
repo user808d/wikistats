@@ -5,6 +5,7 @@ var articles = require('./api/articles')(db);
 var users = require('./api/users')(db);
 var edits = require('./api/edits')(db);
 var urlRef = require('./api/urlReferences')(db);
+var types = require('./api/types')(db);
 
 function requireLogin (req, res, next) {
   if (!req.session_state.user) {
@@ -23,14 +24,14 @@ root.get('/', articles.all, function(req, res, next){
 });
 
 root.route('/articles/new')
-    .get(requireLogin, function(req, res, next){
+    .get(requireLogin, types.all, function(req, res, next){
         res.render('articles/new', {
             title: 'Publish'
         });
     });
 
 root.route('/articles/:articleID')
-    .get(requireLogin, articles.find, urlRef.find,
+    .get(articles.find, urlRef.find,
          function(req, res, next){
              var article = res.locals.articles[0];
              var refs = res.locals.urlReferences;

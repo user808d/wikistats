@@ -2,11 +2,36 @@ extends ../layout
 
 block content
   .container
-    .input-group
-      input(type="file", name="files").input-control#csv-file
+    .row.row-off-canvas.well
+      h2 Publish A New Article
+      .form-group
+        label Article Title
+        input(type="text" placeholder="Title").form-control#title
+        br
+        label Abstract
+        textarea(rows="4" placeholder="Abstract Content").form-control#content
+        br
+        label References
+        input(type="text" placeholder="Url Reference").form-control#urlReference
+        br
+        label Stat
+        input(type="text" placeholder="Table Name").form-control#tableName
+        br
+        label Type
+          include ../partials/articles/types
+        br
+        label Column Types
+        input(type="text" id="headerTypes" placeholder="[\"INT\",\"VARCHAR(20)\",etc]").form-control
+        br
+        label CSV Upload
+        input(type="file", name="files").form-control#csv-file
+        br
+        input(type"text" hidden="true" value="#{user.email}")#email
+        button(type="submit").btn.btn-primary#publish
+          |  Publish
   footer
     include ../partials/page/newArticle
     block newArticle
     include ../partials/page/jsdefaults
     block jsdefaults
-    script(src='/javascripts/csvParsing.js')
+    script(src='/javascripts/newArticle.js')

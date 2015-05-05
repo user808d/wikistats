@@ -1,44 +1,45 @@
 extends layout
 
 block content
-    .container
-      .row.row-offcanvas
-        .col-xs-12
-          .jumbotron
-            h1 #{site}
+  .container
+    .row.row-offcanvas
+      .col-xs-12
+        .jumbotron
+          h1 #{site}
+          p
+            | A central repository for finding statistics with data visualization.
+        .row            
+          .col-6.col-sm-6.col-lg-4
+            h2 Create an Account
             p
-              | A central repository for finding statistics with data visualization.
-          .row            
-            .col-6.col-sm-6.col-lg-4
-              h2 Create an Account
-              p
-                | Creating an account allows you to create and view articles.
-              a(href="/signup").btn.btn-primary
-                | Sign Up
-            .col-6.col-sm-6.col-lg-4
-            .col-6.col-sm-6.col-lg-4
-              h2 Publish an Article
-              p
-                | Publish an article with data you provide.
-              br
-              a(href="/articles/new").btn.btn-primary
-                | Publish
-            .col-xs-12
-          -for (var i in articles)
-            -var article = articles[i]
-            .col-6.col-sm-6.col-lg-4
-              h2 #{article.title}
-              p 
-                | #{article.content}
-              p
-                a(href="/articles/#{article.articleID}" role="button" class="btn btn-default") View Details &raquo;
-            // /span
-          // /row
-        // /span
-      // /row
-    // /container
-    footer
-        include partials/page/jsdefaults.jade
-        block jsdefaults
-        script(src='/javascripts/index.js')
+              | Creating an account allows you to create and view articles.
+            a(href="/signup").btn.btn-primary
+              | Sign Up
+          .col-6.col-sm-6.col-lg-4
+          .col-6.col-sm-6.col-lg-4
+            h2 Publish an Article
+            p
+              | Publish an article with data you provide.
+            br
+            a(href="/articles/new").btn.btn-primary
+              | Publish
+        .col-xs-12
+          br
+        -for (var i in articles)
+          -var article = articles[i]
+          .col-6.col-sm-6.col-lg-4
+            h2 #{article.title}
+            p 
+              | #{article.content}
+            p
+              a(href="/articles/#{article.articleID}" role="button" class="btn btn-default") View Details &raquo;
+          // /span
+        // /row
+      // /span
+    // /row
+  // /container
+  footer
+      include partials/page/jsdefaults.jade
+      block jsdefaults
+      script(src='/javascripts/index.js')
       
